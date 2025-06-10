@@ -1,3 +1,3 @@
 export const breakPoints = {
-	mobileToDesktop: "700px",
+	mobileToDesktop: "768px",
 };

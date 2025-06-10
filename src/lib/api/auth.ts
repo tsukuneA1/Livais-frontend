@@ -1,3 +1,5 @@
+import { User } from "@/types/users";
+
 type SignUpParams = {
 	name: string;
 	email: string;
@@ -75,4 +77,28 @@ export const signinWithGoogle = async (credential: string) => {
 		throw new Error(data.error || "Googleサインアップ失敗");
 	}
 	return data;
+};
+
+export const fetchMe = async (): Promise<User | null> => {
+	try {
+		const res = await fetch(
+			`${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/auth/me`,
+			{
+				headers: {
+					"Content-Type": "application/json",
+					Authorization: `Bearer ${localStorage.getItem("token") || ""}`,
+				},
+				credentials: "include",
+			},
+		);
+		if (res.ok) {
+			const data: User = await res.json();
+			return data;
+		} else {
+			throw new Error("ユーザー情報の取得に失敗");
+		}
+	} catch (error) {
+		console.error("Error fetching user data:", error);
+		throw new Error("ユーザー情報の取得に失敗");
+	}
 };

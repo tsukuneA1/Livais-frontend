@@ -29,12 +29,12 @@ import { useState } from "react";
 
 import { useUser } from "@/app/context/user-context";
 import { visibilityOptions } from "@/constants/visibilityOptions";
+import { pagesPath } from "@/lib/$path";
 import { createPost } from "@/lib/api/post";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-import { pagesPath } from "../../../../utils/$path";
 
-export default function PostForm() {
+const PostFormPage = () => {
 	const [content, setContent] = useState("");
 	const [visibilityOption, setVisibilityOption] = useState(
 		visibilityOptions[0],
@@ -150,4 +150,6 @@ export default function PostForm() {
 			</div>
 		</SubLayout>
 	);
-}
+};
+
+export default PostFormPage;

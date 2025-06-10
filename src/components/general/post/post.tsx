@@ -5,31 +5,26 @@ import {
 	PopoverContent,
 	PopoverTrigger,
 } from "@/components/ui/popover";
-import type { Post } from "@/types/post";
+import type { Post as PostType } from "@/types/post";
 
 import { useUser } from "@/app/context/user-context";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import {
-	Bookmark,
-	EyeOff,
-	Link2,
-	MessageCircle,
-	MessageSquareOff,
-	MoreHorizontal,
-	Repeat2,
-	Share,
-	ShieldAlert,
-	UserRoundX,
-} from "lucide-react";
+	Drawer,
+	DrawerContent,
+	DrawerTitle,
+	DrawerTrigger,
+} from "@/components/ui/drawer";
+import { pagesPath } from "@/lib/$path";
+import { getTimeDistance } from "@/lib/utils";
+import { MessageCircle, MoreHorizontal, Repeat2, Share } from "lucide-react";
 import Link from "next/link";
-import { pagesPath } from "../../utils/$path";
-import { getTimeDistance } from "../lib/utils";
-import { LikeButton } from "./likeButton";
-import { Button } from "./ui/button";
-import { Card, CardContent, CardHeader } from "./ui/card";
-import { Drawer, DrawerContent, DrawerTitle, DrawerTrigger } from "./ui/drawer";
-import { UserIcon } from "./userIcon";
+import { LikeButton } from "../like/likeButton";
+import { UserIcon } from "../userIcon/userIcon";
+import { PostOptions } from "./postOptions";
 
-export const PostCard = ({ post }: { post: Post }) => {
+export const Post = ({ post }: { post: PostType }) => {
 	const { user } = useUser();
 
 	return (
@@ -83,7 +78,7 @@ export const PostCard = ({ post }: { post: Post }) => {
 					<div className="mt-3 flex gap-4 text-sm text-zinc-500">
 						<LikeButton
 							initialLiked={post.isLiked}
-							initialLikes={post.likesCount}
+							initialLikesCount={post.likesCount}
 							postId={post.id}
 							userId={user?.id}
 						/>
@@ -114,50 +109,5 @@ export const PostCard = ({ post }: { post: Post }) => {
 				</div>
 			</div>
 		</Card>
-	);
-};
-
-const PostOptions = () => {
-	return (
-		<div>
-			<div className="m-1 flex flex-col divide-y rounded-md bg-white">
-				<Button variant="ghost" size="sm" className="flex justify-between">
-					<span>保存</span>
-					<Bookmark />
-				</Button>
-				<Button variant="ghost" size="sm" className="flex justify-between">
-					<span>興味なし</span>
-					<EyeOff />
-				</Button>
-			</div>
-			<div className="m-1 flex flex-col divide-y rounded-md bg-white">
-				<Button variant="ghost" size="sm" className="flex justify-between">
-					<span>リンクをコピー</span>
-					<Link2 />
-				</Button>
-			</div>
-			<div className="m-1 flex flex-col divide-y rounded-md bg-white">
-				<Button variant="ghost" size="sm" className="flex justify-between">
-					<span>ミュート</span>
-					<MessageSquareOff />
-				</Button>
-				<Button
-					variant="ghost"
-					size="sm"
-					className="flex justify-between text-red-500"
-				>
-					<span>ブロック</span>
-					<UserRoundX />
-				</Button>
-				<Button
-					variant="ghost"
-					size="sm"
-					className="flex justify-between text-red-500"
-				>
-					<span>報告する</span>
-					<ShieldAlert />
-				</Button>
-			</div>
-		</div>
 	);
 };

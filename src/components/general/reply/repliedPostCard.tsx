@@ -2,7 +2,7 @@
 import { fetchPostDetail } from "@/lib/api/post";
 import type { PostDetail } from "@/types/post_detail";
 import { useEffect, useState } from "react";
-import { Reply } from "./reply";
+import { Reply } from "./general/reply/reply";
 
 export const RepliedPostCard = ({
 	repliedPostId,

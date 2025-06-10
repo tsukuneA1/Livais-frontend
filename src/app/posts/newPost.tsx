@@ -20,6 +20,7 @@ import {
 } from "@/components/ui/select";
 import { breakPoints } from "@/constants/breakpoints";
 import { visibilityOptions } from "@/constants/visibilityOptions";
+import { pagesPath } from "@/lib/$path";
 import { createPost } from "@/lib/api/post";
 import { useMediaQuery } from "@mui/material";
 import {
@@ -34,7 +35,6 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
-import { pagesPath } from "../../../utils/$path";
 import { useUser } from "../context/user-context";
 
 export const NewPost = () => {

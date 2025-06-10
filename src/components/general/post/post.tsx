@@ -18,9 +18,10 @@ import {
 } from "@/components/ui/drawer";
 import { pagesPath } from "@/lib/$path";
 import { getTimeDistance } from "@/lib/utils";
-import { MessageCircle, MoreHorizontal, Repeat2, Share } from "lucide-react";
+import { MessageCircle, MoreHorizontal, Share } from "lucide-react";
 import Link from "next/link";
 import { LikeButton } from "../like/likeButton";
+import { RepostButton } from "../repost/repostButton";
 import { UserIcon } from "../userIcon/userIcon";
 import { PostOptions } from "./postOptions";
 
@@ -90,14 +91,11 @@ export const Post = ({ post }: { post: PostType }) => {
 							<MessageCircle className="h-4 w-4" />
 							{post.repliesCount}
 						</Button>
-						<Button
-							variant="ghost"
-							size="sm"
-							className="flex items-center gap-1 px-2"
-						>
-							<Repeat2 className="h-4 w-4" />
-							{post.repostsCount}
-						</Button>
+						<RepostButton
+							initialReposted={post.isReposted}
+							initialRepostsCount={post.repostsCount}
+							postId={post.id}
+						/>
 						<Button
 							variant="ghost"
 							size="sm"

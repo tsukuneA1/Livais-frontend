@@ -1,16 +1,13 @@
 import { Post } from "@/components/general/post/post";
 import { MainLayout } from "@/layouts/main/layout";
 import type { Post as PostType } from "@/types/post";
-import { v4 as uuidv4 } from "uuid";
 
-type Props = {
-	params: {
-		id: string;
-	};
+type UserPageProps = {
+	params: Promise<{ userId: string }>;
 };
 
-export default async function Page({ params }: Props) {
-	const userId = params.id;
+export default async function Page({ params }: UserPageProps) {
+	const { userId } = await params;
 
 	const userPostsRes = await fetch(
 		`${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/posts/user/${userId}`,

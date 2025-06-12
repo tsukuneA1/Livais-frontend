@@ -1,3 +1,4 @@
+import { UserIcon } from "@/components/general/userIcon/userIcon";
 import {
 	Drawer,
 	DrawerContent,
@@ -21,8 +22,7 @@ import {
 	UserRoundX,
 } from "lucide-react";
 import Link from "next/link";
-import { UserIcon } from "../components/userIcon";
-import { Button } from "./ui/button";
+import { Button } from "../../ui/button";
 
 export const NoticeCard = ({ notice }: { notice: Notice }) => {
 	const link = "";

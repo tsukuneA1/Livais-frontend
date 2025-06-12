@@ -1,6 +1,6 @@
 "use client";
 
-import { NoticeCard } from "@/components/noticeCard";
+import { NoticeCard } from "@/components/general/notice/noticeCard";
 import { fetchNotice } from "@/lib/api/notice";
 import { Notice } from "@/types/notice";
 import { useEffect, useState } from "react";

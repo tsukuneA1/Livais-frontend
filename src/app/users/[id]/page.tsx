@@ -1,16 +1,13 @@
-import { PostCard } from "@/components/postCard";
+import { Post } from "@/components/general/post/post";
 import { MainLayout } from "@/layouts/main/layout";
-import type { Post } from "@/types/post";
-import { v4 as uuidv4 } from "uuid";
+import type { Post as PostType } from "@/types/post";
 
-type Props = {
-	params: {
-		id: string;
-	};
+type UserPageProps = {
+	params: Promise<{ userId: string }>;
 };
 
-export default async function Page({ params }: Props) {
-	const userId = params.id;
+export default async function Page({ params }: UserPageProps) {
+	const { userId } = await params;
 
 	const userPostsRes = await fetch(
 		`${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/posts/user/${userId}`,
@@ -23,12 +20,12 @@ export default async function Page({ params }: Props) {
 		throw new Error(`Failed to fetch post with id: ${userId}`);
 	}
 
-	const posts: Post[] = await userPostsRes.json();
+	const posts: PostType[] = await userPostsRes.json();
 
 	return (
 		<MainLayout>
 			{posts.map((post) => (
-				<PostCard key={uuidv4()} post={post} />
+				<Post key={post.id} post={post} />
 			))}
 		</MainLayout>
 	);

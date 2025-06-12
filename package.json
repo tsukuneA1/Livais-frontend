@@ -11,7 +11,7 @@
 		"format": "biome format ./src/**/* --write",
 		"check": "biome check --apply ./src/**/*",
 		"prepare": "husky install",
-		"dev:path": "pathpida --ignorepath .gitignore --output ./utils"
+		"dev:path": "pathpida --ignorepath .gitignore --output ./src/lib"
 	},
 	"dependencies": {
 		"@emotion/react": "^11.14.0",

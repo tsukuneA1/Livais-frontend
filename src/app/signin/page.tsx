@@ -4,12 +4,12 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
+import { pagesPath } from "@/lib/$path";
 import { signin, signinWithGoogle } from "@/lib/api/auth";
 import { type CredentialResponse, GoogleLogin } from "@react-oauth/google";
 import { ArrowRight, AtSign, KeyRound } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
-import { pagesPath } from "../../../utils/$path";
 import { useUser } from "../context/user-context";
 
 export default function SignInPage() {

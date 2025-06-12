@@ -1,5 +1,6 @@
 "use client";
 
+import { fetchMe } from "@/lib/api/auth";
 import type { User } from "@/types/users";
 import { createContext, useContext, useEffect, useState } from "react";
 
@@ -14,24 +15,12 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
 	const [user, setUser] = useState<User | null>(null);
 
 	useEffect(() => {
-		const fetchMe = async () => {
-			try {
-				const res = await fetch(
-					`${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/auth/me`,
-					{
-						credentials: "include",
-					},
-				);
-				if (res.ok) {
-					const data = await res.json();
-					setUser(data);
-				}
-			} catch (e) {
-				console.error("ユーザー情報の取得に失敗:", e);
-			}
+		const getUserData = async () => {
+			const userData = await fetchMe();
+			setUser(userData);
 		};
 
-		fetchMe();
+		getUserData();
 	}, []);
 
 	return (

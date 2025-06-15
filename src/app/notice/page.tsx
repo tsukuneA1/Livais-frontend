@@ -7,17 +7,10 @@ import { useEffect, useState } from "react";
 
 export default function NoticePage() {
 	const [notices, setNotices] = useState<Notice[]>([]);
-	const [token, setToken] = useState<string | null>(null);
 
 	useEffect(() => {
-		setToken(localStorage.getItem("token"));
-	}, []);
-
-	useEffect(() => {
-		if (!token) return;
-
 		async function load() {
-			const notices = await fetchNotice(token as string);
+			const notices = await fetchNotice();
 			setNotices(notices);
 		}
 		load();

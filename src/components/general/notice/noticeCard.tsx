@@ -19,7 +19,7 @@ import {
 	MessageSquareOff,
 	MoreHorizontal,
 	Repeat2,
-	UserRoundX,
+	UserRoundPlus,
 } from "lucide-react";
 import Link from "next/link";
 import { Button } from "../../ui/button";
@@ -76,7 +76,9 @@ export const NoticeCard = ({ notice }: { notice: Notice }) => {
 							{NotificeMessage(notice.notifiableType)}
 						</span>
 					</div>
-					<span className="mt-2 text-gray-500">{notice.post.content}</span>
+					<span className="mt-2 text-gray-500">
+						{notice.post?.content ? notice.post.content : ""}
+					</span>
 				</div>
 			</Link>
 		</Card>
@@ -92,7 +94,7 @@ const NoticeIcon = ({ type }: { type: NotifiableType }) => {
 		case NotifiableType.Reply:
 			return <MessageSquareOff />;
 		case NotifiableType.Follow:
-			return <UserRoundX />;
+			return <UserRoundPlus />;
 		default:
 			return null;
 	}

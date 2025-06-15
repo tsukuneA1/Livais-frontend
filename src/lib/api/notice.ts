@@ -16,5 +16,5 @@ export async function fetchNotice(): Promise<Notice[]> {
 	if (!response.ok) {
 		throw new Error("Failed to fetch notices");
 	}
-	return response.json() as Promise<Notice[]>;
+	return (await response.json()) as Promise<Notice[]>;
 }

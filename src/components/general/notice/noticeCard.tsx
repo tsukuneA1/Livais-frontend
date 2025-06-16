@@ -94,7 +94,7 @@ export const NoticeCard = ({ notice }: { notice: Notice }) => {
 					<div>
 						<span className="font-bold">{notice.user.name}</span>
 						<span className="font-normal">
-							{NoticeMessage(notice.notifiableType)}
+							{noticeMessages[notice.notifiableType]}
 						</span>
 					</div>
 					<span className="mt-2 text-gray-500">
@@ -141,17 +141,9 @@ const NoticeOptions = ({
 	);
 };
 
-const NoticeMessage = (type: NotifiableType) => {
-	switch (type) {
-		case NotifiableType.Like:
-			return "さんがあなたの投稿にいいねしました";
-		case NotifiableType.Repost:
-			return "さんがあなたの投稿をリポストしました";
-		case NotifiableType.Reply:
-			return "さんがあなたの投稿に返信しました";
-		case NotifiableType.Follow:
-			return "さんがあなたをフォローしました";
-		default:
-			return "さんからの通知";
-	}
+const noticeMessages: Partial<Record<NotifiableType, string>> = {
+	[NotifiableType.Like]: "さんがあなたの投稿にいいねしました",
+	[NotifiableType.Repost]: "さんがあなたの投稿をリポストしました",
+	[NotifiableType.Reply]: "さんがあなたの投稿に返信しました",
+	[NotifiableType.Follow]: "さんがあなたをフォローしました",
 };

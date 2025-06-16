@@ -38,10 +38,10 @@ export const NoticeFetcher = () => {
 	}
 
 	return (
-		<>
+		<div className="flex flex-col justify-center items-center">
 			{notices.map((notice) => (
 				<NoticeCard key={notice.id} notice={notice} />
 			))}
-		</>
+		</div>
 	);
 };

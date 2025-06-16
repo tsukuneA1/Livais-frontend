@@ -8,9 +8,7 @@ const NoticePage = async () => {
 				<h1 className="flex py-2 w-full font-bold justify-center items-center">
 					通知
 				</h1>
-				<div className="flex justify-center items-center">
-					<NoticeFetcher />
-				</div>
+				<NoticeFetcher />
 			</div>
 		</MainLayout>
 	);

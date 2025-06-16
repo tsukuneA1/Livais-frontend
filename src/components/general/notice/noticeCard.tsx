@@ -43,7 +43,7 @@ export const NoticeCard = ({ notice }: { notice: Notice }) => {
 		}
 	};
 
-	if (isHidden) return <div />;
+	if (isHidden) return null;
 
 	return (
 		<Card className="w-full rounded-none p-4 sm:w-2xs md:w-2xl flex gap-4">

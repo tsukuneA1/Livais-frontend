@@ -1,5 +1,6 @@
 "use client";
 import { UserIcon } from "@/components/general/userIcon/userIcon";
+import { Card } from "@/components/ui/card";
 import {
 	Drawer,
 	DrawerContent,
@@ -15,7 +16,6 @@ import { pagesPath } from "@/lib/$path";
 import { hideNotice } from "@/lib/api/notice";
 import { getTimeDistance } from "@/lib/utils";
 import { Notice, NotifiableType } from "@/types/notice";
-import { Card } from "@mui/material";
 import {
 	Frown,
 	Heart,

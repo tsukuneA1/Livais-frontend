@@ -1,5 +1,6 @@
 "use client";
 import { UserIcon } from "@/components/general/userIcon/userIcon";
+import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import {
 	Drawer,
@@ -26,7 +27,6 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
-import { Button } from "../../ui/button";
 
 export const NoticeCard = ({ notice }: { notice: Notice }) => {
 	const [isHidden, setIsHidden] = useState(false);

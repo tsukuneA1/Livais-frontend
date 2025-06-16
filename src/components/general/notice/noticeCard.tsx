@@ -93,7 +93,7 @@ export const NoticeCard = ({ notice }: { notice: Notice }) => {
 					<div>
 						<span className="font-bold">{notice.user.name}</span>
 						<span className="font-normal">
-							{NotificeMessage(notice.notifiableType)}
+							{NoticeMessage(notice.notifiableType)}
 						</span>
 					</div>
 					<span className="mt-2 text-gray-500">
@@ -140,7 +140,7 @@ const NoticeOptions = ({
 	);
 };
 
-const NotificeMessage = (type: NotifiableType) => {
+const NoticeMessage = (type: NotifiableType) => {
 	switch (type) {
 		case NotifiableType.Like:
 			return "さんがあなたの投稿にいいねしました";

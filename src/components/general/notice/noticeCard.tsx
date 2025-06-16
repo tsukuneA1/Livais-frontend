@@ -29,7 +29,9 @@ import { Button } from "../../ui/button";
 
 export const NoticeCard = ({ notice }: { notice: Notice }) => {
 	const [is_hidden, setIsHidden] = useState(false);
-	const link = "";
+	const link = notice.post
+		? `/posts/${notice.post.id}`
+		: `/users/${notice.user.id}`;
 
 	const handleHideNotice = async (id: number) => {
 		try {
@@ -43,54 +45,51 @@ export const NoticeCard = ({ notice }: { notice: Notice }) => {
 	if (is_hidden) return <div />;
 
 	return (
-		<Card className="w-full rounded-none p-4 pb-2 sm:w-2xs md:w-2xl flex gap-4">
+		<Card className="w-full rounded-none p-4 sm:w-2xs md:w-2xl flex gap-4">
 			<div className="pt-2">
 				<NoticeIcon type={notice.notifiableType} />
 			</div>
-			<Link href={link} className="w-full h-full">
-				<div className="flex flex-col flex-1">
-					<div className="flex items-center p-0 pb-0.5 flex-1">
-						<UserIcon iconInfo={{ ...notice.user }} />
-						<span className="text-gray-400 text-xs ml-4 pt-3">
-							{getTimeDistance(notice.createdAt)}
-						</span>
-						<Popover>
-							<PopoverTrigger
-								asChild
-								className="ml-auto text-gray-500 hidden md:block"
-							>
-								<Button variant="ghost" size="icon">
-									<MoreHorizontal className="h-4 w-4 ml-2.5" />
-								</Button>
-							</PopoverTrigger>
-							<PopoverContent
-								align="end"
-								className="m-0 flex flex-col divide-y p-0"
-							>
-								<NoticeOptions
-									noticeId={notice.id}
-									handleHideNotice={handleHideNotice}
-								/>
-							</PopoverContent>
-						</Popover>
-						<Drawer>
-							<DrawerTrigger
-								asChild
-								className="ml-auto text-gray-500 md:hidden"
-							>
-								<Button variant="ghost" size="icon">
-									<MoreHorizontal className="h-4 w-4 ml-2.5" />
-								</Button>
-							</DrawerTrigger>
-							<DrawerContent className="flex flex-col bg-neutral-200 p-4">
-								<DrawerTitle className="mt-3" />
-								<NoticeOptions
-									noticeId={notice.id}
-									handleHideNotice={handleHideNotice}
-								/>
-							</DrawerContent>
-						</Drawer>
-					</div>
+			<div className="flex flex-col flex-1">
+				<div className="flex items-center p-0 pb-0.5 flex-1">
+					<UserIcon iconInfo={{ ...notice.user }} />
+					<span className="text-gray-400 text-xs ml-4 pt-3">
+						{getTimeDistance(notice.createdAt)}
+					</span>
+					<Popover>
+						<PopoverTrigger
+							asChild
+							className="ml-auto text-gray-500 hidden md:block"
+						>
+							<Button variant="ghost" size="icon">
+								<MoreHorizontal className="h-4 w-4 ml-2.5" />
+							</Button>
+						</PopoverTrigger>
+						<PopoverContent
+							align="end"
+							className="m-0 flex flex-col divide-y p-0"
+						>
+							<NoticeOptions
+								noticeId={notice.id}
+								handleHideNotice={handleHideNotice}
+							/>
+						</PopoverContent>
+					</Popover>
+					<Drawer>
+						<DrawerTrigger asChild className="ml-auto text-gray-500 md:hidden">
+							<Button variant="ghost" size="icon">
+								<MoreHorizontal className="h-4 w-4 ml-2.5" />
+							</Button>
+						</DrawerTrigger>
+						<DrawerContent className="flex flex-col bg-neutral-200 p-4">
+							<DrawerTitle className="mt-3" />
+							<NoticeOptions
+								noticeId={notice.id}
+								handleHideNotice={handleHideNotice}
+							/>
+						</DrawerContent>
+					</Drawer>
+				</div>
+				<Link href={link} className="w-full h-full">
 					<div>
 						<span className="font-bold">{notice.user.name}</span>
 						<span className="font-normal">
@@ -100,8 +99,8 @@ export const NoticeCard = ({ notice }: { notice: Notice }) => {
 					<span className="mt-2 text-gray-500">
 						{notice.post?.content ? notice.post.content : ""}
 					</span>
-				</div>
-			</Link>
+				</Link>
+			</div>
 		</Card>
 	);
 };

@@ -17,4 +17,5 @@ export type Post = {
 	replies: Post[];
 	isLiked: boolean;
 	isReposted: boolean;
+	quotedPost?: Post | null;
 };

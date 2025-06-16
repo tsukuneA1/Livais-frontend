@@ -7,6 +7,7 @@ import {
 	PopoverContent,
 	PopoverTrigger,
 } from "@/components/ui/popover";
+import { pagesPath } from "@/lib/$path";
 import { SquareArrowOutUpRight, UserMinus, UserPlus } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
@@ -29,6 +30,8 @@ export const UserIcon = ({ iconInfo }: { iconInfo: UserIconInfo }) => {
 
 		alert("フォローに失敗しました");
 	};
+
+	const userPageLink = pagesPath.users._id(iconInfo.id).$url().path;
 
 	if (iconInfo.isFollowing) {
 		return (
@@ -79,7 +82,7 @@ export const UserIcon = ({ iconInfo }: { iconInfo: UserIconInfo }) => {
 					size="sm"
 					className="flex justify-between"
 				>
-					<Link href={`/users/${iconInfo.id}`}>
+					<Link href={userPageLink}>
 						<span>プロフィールページ</span>
 						<SquareArrowOutUpRight />
 					</Link>

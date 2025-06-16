@@ -1,32 +1,17 @@
-import { Post } from "@/components/general/post/post";
 import { MainLayout } from "@/layouts/main/layout";
-import type { Post as PostType } from "@/types/post";
 
 type UserPageProps = {
-	params: Promise<{ userId: string }>;
+	params: Promise<{ id: string }>;
 };
 
-export default async function Page({ params }: UserPageProps) {
-	const { userId } = await params;
-
-	const userPostsRes = await fetch(
-		`${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/posts/user/${userId}`,
-		{
-			cache: "no-store",
-		},
-	);
-
-	if (!userPostsRes.ok) {
-		throw new Error(`Failed to fetch post with id: ${userId}`);
-	}
-
-	const posts: PostType[] = await userPostsRes.json();
+const UserPage = async ({ params }: UserPageProps) => {
+	const { id } = await params;
 
 	return (
 		<MainLayout>
-			{posts.map((post) => (
-				<Post key={post.id} post={post} />
-			))}
+			<h1>{id}のユーザーページ</h1>
 		</MainLayout>
 	);
-}
+};
+
+export default UserPage;

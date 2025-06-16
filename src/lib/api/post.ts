@@ -36,19 +36,16 @@ export async function fetchPostDetail(postId: string): Promise<Post> {
 	return await res.json();
 }
 
-export async function createPost(
-	content: string,
-	userId: number | undefined,
-): Promise<void> {
+export async function createPost(content: string): Promise<void> {
 	const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/posts`, {
 		method: "POST",
 		headers: {
 			"Content-Type": "application/json",
+			Authorization: `Bearer ${localStorage.getItem("token") || ""}`,
 		},
 		credentials: "include",
 		body: JSON.stringify({
 			content,
-			user_id: userId,
 		}),
 	});
 
@@ -60,11 +57,9 @@ export async function createPost(
 export async function postReply({
 	content,
 	replyToId,
-	userId,
 }: {
 	content: string;
 	replyToId: number;
-	userId: number | undefined;
 }): Promise<void> {
 	const res = await fetch(
 		`${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/posts/${replyToId}/replies`,
@@ -72,12 +67,12 @@ export async function postReply({
 			method: "POST",
 			headers: {
 				"Content-Type": "application/json",
+				Authorization: `Bearer ${localStorage.getItem("token") || ""}`,
 			},
 			credentials: "include",
 			body: JSON.stringify({
 				content,
 				reply_to_id: replyToId,
-				user_id: userId,
 			}),
 		},
 	);
@@ -143,3 +138,30 @@ export async function repost({
 
 	return await fetchPostDetail(postId.toString());
 }
+
+export const quotePost = async ({
+	quotedPostId,
+	content,
+}: {
+	quotedPostId: number;
+	content: string;
+}): Promise<Post> => {
+	const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/posts`, {
+		method: "POST",
+		headers: {
+			"Content-Type": "application/json",
+			Authorization: `Bearer ${localStorage.getItem("token") || ""}`,
+		},
+		credentials: "include",
+		body: JSON.stringify({
+			content: content,
+			quoted_post_id: quotedPostId,
+		}),
+	});
+
+	if (!res.ok) {
+		throw new Error(`Failed to quote post: ${res.statusText}`);
+	}
+
+	return await res.json();
+};

@@ -8,6 +8,7 @@ import type { PostDetail } from "@/types/post_detail";
 import { MessageCircle } from "lucide-react";
 import Link from "next/link";
 import { LikeButton } from "../like/likeButton";
+import { QuotedPostCard } from "../postCreationDialog/quotedPostCard";
 import { RepostButton } from "../repost/repostButton";
 
 export const Reply = ({ reply }: { reply: PostDetail }) => {
@@ -29,7 +30,7 @@ export const Reply = ({ reply }: { reply: PostDetail }) => {
 				<div className="flex-1">
 					<div className="font-semibold">@{reply.user.name}</div>
 					<p className="text-zinc-800 dark:text-zinc-100">{reply.content}</p>
-
+					{reply.quotedPost && <QuotedPostCard {...reply.quotedPost} />}
 					<div className="mt-3 flex gap-4 text-sm text-zinc-500">
 						<LikeButton
 							initialLiked={reply.isLiked}

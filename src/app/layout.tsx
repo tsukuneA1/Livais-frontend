@@ -21,8 +21,10 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
 	children,
+	modal,
 }: Readonly<{
 	children: React.ReactNode;
+	modal: React.ReactNode;
 }>) {
 	return (
 		<html lang="en">
@@ -32,6 +34,7 @@ export default function RootLayout({
 				<UserProvider>
 					<GoogleOAuthProvider clientId="636916432000-pri3mgbs2p99tal91lm7nc218bfitv0k.apps.googleusercontent.com">
 						{children}
+						{modal}
 					</GoogleOAuthProvider>
 				</UserProvider>
 			</body>

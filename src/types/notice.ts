@@ -6,7 +6,7 @@ export type Notice = {
 		image: string;
 		isFollowing: boolean;
 	};
-	post: {
+	post?: {
 		id: number;
 		content: string;
 	};

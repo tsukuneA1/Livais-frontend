@@ -1,3 +1,4 @@
+"use client";
 import { UserIcon } from "@/components/general/userIcon/userIcon";
 import {
 	Drawer,
@@ -10,6 +11,7 @@ import {
 	PopoverContent,
 	PopoverTrigger,
 } from "@/components/ui/popover";
+import { hideNotice } from "@/lib/api/notice";
 import { getTimeDistance } from "@/lib/utils";
 import { Notice, NotifiableType } from "@/types/notice";
 import { Card } from "@mui/material";
@@ -22,10 +24,23 @@ import {
 	UserRoundPlus,
 } from "lucide-react";
 import Link from "next/link";
+import { useState } from "react";
 import { Button } from "../../ui/button";
 
 export const NoticeCard = ({ notice }: { notice: Notice }) => {
+	const [is_hidden, setIsHidden] = useState(false);
 	const link = "";
+
+	const handleHideNotice = async (id: number) => {
+		try {
+			await hideNotice(id);
+			setIsHidden(true);
+		} catch (error) {
+			console.error("Failed to hide notice:", error);
+		}
+	};
+
+	if (is_hidden) return <div />;
 
 	return (
 		<Card className="w-full rounded-none p-4 pb-2 sm:w-2xs md:w-2xl flex gap-4">
@@ -52,7 +67,10 @@ export const NoticeCard = ({ notice }: { notice: Notice }) => {
 								align="end"
 								className="m-0 flex flex-col divide-y p-0"
 							>
-								<NoticeOptions />
+								<NoticeOptions
+									noticeId={notice.id}
+									handleHideNotice={handleHideNotice}
+								/>
 							</PopoverContent>
 						</Popover>
 						<Drawer>
@@ -66,7 +84,10 @@ export const NoticeCard = ({ notice }: { notice: Notice }) => {
 							</DrawerTrigger>
 							<DrawerContent className="flex flex-col bg-neutral-200 p-4">
 								<DrawerTitle className="mt-3" />
-								<NoticeOptions />
+								<NoticeOptions
+									noticeId={notice.id}
+									handleHideNotice={handleHideNotice}
+								/>
 							</DrawerContent>
 						</Drawer>
 					</div>
@@ -100,10 +121,19 @@ const NoticeIcon = ({ type }: { type: NotifiableType }) => {
 	}
 };
 
-const NoticeOptions = () => {
+const NoticeOptions = ({
+	noticeId,
+	handleHideNotice,
+}: { noticeId: number; handleHideNotice: (id: number) => void }) => {
 	return (
 		<div className="m-1 flex flex-col divide-y rounded-md bg-white">
-			<Button variant="ghost" className="flex justify-between">
+			<Button
+				variant="ghost"
+				className="flex justify-between"
+				onClick={() => {
+					handleHideNotice(noticeId);
+				}}
+			>
 				<span>表示しない</span>
 				<Frown />
 			</Button>

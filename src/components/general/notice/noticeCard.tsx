@@ -29,7 +29,7 @@ import { useState } from "react";
 import { Button } from "../../ui/button";
 
 export const NoticeCard = ({ notice }: { notice: Notice }) => {
-	const [is_hidden, setIsHidden] = useState(false);
+	const [isHidden, setIsHidden] = useState(false);
 	const link = notice.post
 		? pagesPath.posts._id(notice.post.id).$url().path
 		: pagesPath.users._id(notice.user.id).$url().path;
@@ -43,7 +43,7 @@ export const NoticeCard = ({ notice }: { notice: Notice }) => {
 		}
 	};
 
-	if (is_hidden) return <div />;
+	if (isHidden) return <div />;
 
 	return (
 		<Card className="w-full rounded-none p-4 sm:w-2xs md:w-2xl flex gap-4">

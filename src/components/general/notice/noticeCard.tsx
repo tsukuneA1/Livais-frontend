@@ -11,6 +11,7 @@ import {
 	PopoverContent,
 	PopoverTrigger,
 } from "@/components/ui/popover";
+import { pagesPath } from "@/lib/$path";
 import { hideNotice } from "@/lib/api/notice";
 import { getTimeDistance } from "@/lib/utils";
 import { Notice, NotifiableType } from "@/types/notice";
@@ -30,8 +31,8 @@ import { Button } from "../../ui/button";
 export const NoticeCard = ({ notice }: { notice: Notice }) => {
 	const [is_hidden, setIsHidden] = useState(false);
 	const link = notice.post
-		? `/posts/${notice.post.id}`
-		: `/users/${notice.user.id}`;
+		? pagesPath.posts._id(notice.post.id).$url().path
+		: pagesPath.users._id(notice.user.id).$url().path;
 
 	const handleHideNotice = async (id: number) => {
 		try {

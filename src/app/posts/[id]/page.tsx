@@ -1,8 +1,12 @@
 import { DetailPost } from "@/components/general/post/detailPost";
 import { MainLayout } from "@/layouts/main/layout";
 
-const PostIdPage = ({ params }: { params: { id: string } }) => {
-	const { id } = params;
+type PostPageProps = {
+	params: Promise<{ id: string }>;
+};
+
+const PostPage = async ({ params }: PostPageProps) => {
+	const { id } = await params;
 
 	return (
 		<MainLayout>
@@ -11,4 +15,4 @@ const PostIdPage = ({ params }: { params: { id: string } }) => {
 	);
 };
 
-export default PostIdPage;
+export default PostPage;

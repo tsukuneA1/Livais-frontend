@@ -1,3 +1,5 @@
+import { Post } from "./post";
+
 export type PostDetail = {
 	id: number;
 	content: string;
@@ -16,4 +18,5 @@ export type PostDetail = {
 	replies: PostDetail[];
 	isLiked: boolean;
 	isReposted: boolean;
+	quotedPost?: Post | null;
 };

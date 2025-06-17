@@ -28,7 +28,10 @@ import Link from "next/link";
 import { useState } from "react";
 
 import { useUser } from "@/app/context/user-context";
-import { visibilityOptions } from "@/constants/visibilityOptions";
+import {
+	visibilityOptions,
+	visibilityTextMap,
+} from "@/constants/visibilityOptions";
 import { pagesPath } from "@/lib/$path";
 import { createPost } from "@/lib/api/post";
 import { useRouter } from "next/navigation";
@@ -45,7 +48,7 @@ const PostFormPage = () => {
 
 	const handleSubmit = async () => {
 		const postData = async () => {
-			await createPost(content, user?.id);
+			await createPost(content);
 		};
 
 		toast.promise(postData(), {
@@ -113,17 +116,7 @@ const PostFormPage = () => {
 							<SelectTrigger className="w-auto border-none shadow-none">
 								<SelectValue>
 									<div className="flex items-center gap-2">
-										{visibilityOption === visibilityOptions[0] ? (
-											<div>フォロワーは返信・引用できます</div>
-										) : visibilityOption === visibilityOptions[1] ? (
-											<div className="flex items-center gap-2">
-												フォロー中のユーザーは返信・引用できます
-											</div>
-										) : (
-											<div className="flex items-center gap-2">
-												メンションしたユーザーのみは返信・引用できます
-											</div>
-										)}
+										{visibilityTextMap[visibilityOption] || ""}
 									</div>
 								</SelectValue>
 							</SelectTrigger>

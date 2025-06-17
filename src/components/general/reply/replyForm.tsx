@@ -19,7 +19,10 @@ import {
 	SelectValue,
 } from "@/components/ui/select";
 import { breakPoints } from "@/constants/breakpoints";
-import { visibilityOptions } from "@/constants/visibilityOptions";
+import {
+	visibilityOptions,
+	visibilityTextMap,
+} from "@/constants/visibilityOptions";
 import { postReply } from "@/lib/api/post";
 import type { PostDetail } from "@/types/post_detail";
 import type { User } from "@/types/users";
@@ -55,7 +58,6 @@ export default function ReplyForm({ user, replyToPost }: Props) {
 			await postReply({
 				content: content,
 				replyToId: replyToPost.id,
-				userId: user?.id,
 			});
 		};
 
@@ -143,17 +145,7 @@ export default function ReplyForm({ user, replyToPost }: Props) {
 									<SelectTrigger className="w-auto border-none shadow-none cursor-pointer">
 										<SelectValue>
 											<div className="flex items-center gap-2">
-												{visibilityOption === visibilityOptions[0] ? (
-													<div>フォロワーは返信・引用できます</div>
-												) : visibilityOption === visibilityOptions[1] ? (
-													<div className="flex items-center gap-2">
-														フォロー中のユーザーは返信・引用できます
-													</div>
-												) : (
-													<div className="flex items-center gap-2">
-														メンションしたユーザーのみは返信・引用できます
-													</div>
-												)}
+												{visibilityTextMap[visibilityOption] || ""}
 											</div>
 										</SelectValue>
 									</SelectTrigger>

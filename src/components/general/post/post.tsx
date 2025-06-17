@@ -20,7 +20,9 @@ import { pagesPath } from "@/lib/$path";
 import { getTimeDistance } from "@/lib/utils";
 import { MessageCircle, MoreHorizontal, Share } from "lucide-react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { LikeButton } from "../like/likeButton";
+import { QuotedPostCard } from "../postCreationDialog/quotedPostCard";
 import { RepostButton } from "../repost/repostButton";
 import { UserIcon } from "../userIcon/userIcon";
 import { PostOptions } from "./postOptions";
@@ -28,8 +30,17 @@ import { PostOptions } from "./postOptions";
 export const Post = ({ post }: { post: PostType }) => {
 	const { user } = useUser();
 
+	const router = useRouter();
+	const handlePostClick = () => {
+		router.push(pagesPath.posts._id(post.id).$url().path);
+	};
+
+	const stopPropagation = (e: React.MouseEvent<HTMLDivElement>) => {
+		e.stopPropagation();
+	};
+
 	return (
-		<Card className="w-full rounded-none p-4 pb-2 sm:w-2xs md:w-2xl">
+		<Card className="w-full rounded-none p-4 pb-2 sm:w-2xl">
 			<div className="flex gap-4">
 				<UserIcon iconInfo={{ ...post.user }} />
 				<div className="flex flex-1 flex-col">
@@ -71,38 +82,47 @@ export const Post = ({ post }: { post: PostType }) => {
 							</DrawerContent>
 						</Drawer>
 					</CardHeader>
-					<Link href={pagesPath.posts._id(post.id).$url().path}>
+					<div className="cursor-pointer" onClick={handlePostClick} role="link">
 						<CardContent className="p-0 text-base text-zinc-800 dark:text-zinc-200">
 							{post.content}
+							{post.quotedPost && <QuotedPostCard {...post.quotedPost} />}
 						</CardContent>
-					</Link>
-					<div className="mt-3 flex gap-4 text-sm text-zinc-500">
-						<LikeButton
-							initialLiked={post.isLiked}
-							initialLikesCount={post.likesCount}
-							postId={post.id}
-							userId={user?.id}
-						/>
-						<Button
-							variant="ghost"
-							size="sm"
-							className="flex items-center gap-1 px-2"
-						>
-							<MessageCircle className="h-4 w-4" />
-							{post.repliesCount}
-						</Button>
-						<RepostButton
-							initialReposted={post.isReposted}
-							initialRepostsCount={post.repostsCount}
-							postId={post.id}
-						/>
-						<Button
-							variant="ghost"
-							size="sm"
-							className="flex items-center gap-1 px-2"
-						>
-							<Share />
-						</Button>
+						<div className="mt-3 flex gap-4 text-sm text-zinc-500">
+							<div onClick={stopPropagation}>
+								<LikeButton
+									initialLiked={post.isLiked}
+									initialLikesCount={post.likesCount}
+									postId={post.id}
+									userId={user?.id}
+								/>
+							</div>
+							<div onClick={stopPropagation}>
+								<Button
+									variant="ghost"
+									size="sm"
+									className="flex items-center gap-1 px-2"
+								>
+									<MessageCircle className="h-4 w-4" />
+									{post.repliesCount}
+								</Button>
+							</div>
+							<div onClick={stopPropagation}>
+								<RepostButton
+									initialReposted={post.isReposted}
+									initialRepostsCount={post.repostsCount}
+									postId={post.id}
+								/>
+							</div>
+							<div onClick={stopPropagation}>
+								<Button
+									variant="ghost"
+									size="sm"
+									className="flex items-center gap-1 px-2"
+								>
+									<Share />
+								</Button>
+							</div>
+						</div>
 					</div>
 				</div>
 			</div>

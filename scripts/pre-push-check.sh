@@ -7,5 +7,10 @@ if [ "$current_branch" = "main" ]; then
   exit 1
 fi
 
+if [ "$current_branch" = "dev" ]; then
+  echo "🚫 Pushing to 'develop' branch is not allowed."
+  exit 1
+fi
+
 echo "✅ Branch '$current_branch' is allowed to push."
 exit 0

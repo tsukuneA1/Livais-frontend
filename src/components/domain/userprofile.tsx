@@ -2,9 +2,9 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Mail, CalendarDays,ChevronLeft,Search,MoreHorizontal } from 'lucide-react';
-import type { UserProfileProps } from '@/types/profile.ts';
+import type { UserProfileProps } from '@/types/profile';
 
-export const UserProfile = ({ userId,user }: UserProfileProps ) => {
+export const UserProfile = ({ user }: UserProfileProps ) => {
   return (
     <div className='min-h-screen w-full bg-gray-100'>
       <div className="max-w mx-auto relative">
@@ -29,7 +29,7 @@ export const UserProfile = ({ userId,user }: UserProfileProps ) => {
                 {user.name[0]}
               </AvatarFallback>
             </Avatar>
-            <Avatar className='-bottom-28 absolute top-40 left-4 size-23 border-6 border-white'>
+            <Avatar className='-bottom-28 absolute left-4 size-23 border-6 border-white'>
               <AvatarImage src={user.image || "/placeholder.svg"} alt={user.name} />
               <AvatarFallback>{user.name[0]}</AvatarFallback>
             </Avatar>

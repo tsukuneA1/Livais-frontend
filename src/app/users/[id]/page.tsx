@@ -1,7 +1,6 @@
 import { Post } from '@/components/general/post/post';
 import { MainLayout } from '@/layouts/main/layout';
 import type { Post as posttype } from '@/types/post';
-import { v4 as uuidv4 } from 'uuid';
 import { UserProfile } from '@/components/domain/userprofile';
 import { mockUser } from '@/const/mockUser';
 import { fetchUser } from '@/lib/api/user';

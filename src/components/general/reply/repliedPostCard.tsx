@@ -18,7 +18,6 @@ export const RepliedPostCard = ({
 				setParentPost(res);
 			} catch (error) {
 				console.error("Failed to fetch post details:", error);
-				// Optionally, you can set a fallback state or notify the user here
 				setParentPost(null);
 			}
 		};

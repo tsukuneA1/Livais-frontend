@@ -1,3 +1,5 @@
+"use client";
+
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import {
@@ -5,6 +7,7 @@ import {
 	PopoverContent,
 	PopoverTrigger,
 } from "@/components/ui/popover";
+import { pagesPath } from "@/lib/$path";
 import { SquareArrowOutUpRight, UserMinus, UserPlus } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
@@ -28,10 +31,12 @@ export const UserIcon = ({ iconInfo }: { iconInfo: UserIconInfo }) => {
 		alert("フォローに失敗しました");
 	};
 
+	const userPageLink = pagesPath.users._id(iconInfo.id).$url().path;
+
 	if (iconInfo.isFollowing) {
 		return (
-			<Link href={`/users/${iconInfo.id}`}>
-				<Avatar className="top-2 border-1 border-gray-300">
+			<Link href={userPageLink} className="inline-block">
+				<Avatar className="top-0.5 border-1 border-gray-300">
 					<AvatarImage src={iconInfo.image} />
 					<AvatarFallback>U</AvatarFallback>
 				</Avatar>
@@ -77,7 +82,7 @@ export const UserIcon = ({ iconInfo }: { iconInfo: UserIconInfo }) => {
 					size="sm"
 					className="flex justify-between"
 				>
-					<Link href={`/users/${iconInfo.id}`}>
+					<Link href={userPageLink}>
 						<span>プロフィールページ</span>
 						<SquareArrowOutUpRight />
 					</Link>

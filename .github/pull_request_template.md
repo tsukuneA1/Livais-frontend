@@ -1,4 +1,4 @@
-<!-- I want to review in Japanese. -->
+<!-- I want to review in Japanese. -->Add commentMore actions
 - [ ] セルフレビューをしたらチェックを入れてください
 - [ ] github copilot以外のAIレビューをしたらチェックを入れてください
 - [ ] github copilot reviewを依頼し、解決した

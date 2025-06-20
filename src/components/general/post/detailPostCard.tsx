@@ -7,13 +7,13 @@ import { useEffect, useRef, useState } from "react";
 import { RepliedPostCard } from "../reply/repliedPostCard";
 import ReplyForm from "../reply/replyForm";
 import { ReplyPostCard } from "../reply/replyPostCard";
-import { Post } from "./post";
+import { PostCard } from "./postCard";
 
 type Props = {
 	id: string;
 };
 
-export const DetailPost = ({ id }: Props) => {
+export const DetailPostCard = ({ id }: Props) => {
 	const [post, setPost] = useState<PostType | null>(null);
 	const mainPostRef = useRef<HTMLDivElement | null>(null);
 	const { user } = useUser();
@@ -44,7 +44,7 @@ export const DetailPost = ({ id }: Props) => {
 			{post.replyToId && <RepliedPostCard repliedPostId={post.replyToId} />}
 			<div className="max-w-2xl flex-1">
 				<div ref={mainPostRef} />
-				<Post post={post} />
+				<PostCard post={post} />
 				{post.repliesCount > 0 && (
 					<div className="mt-4">
 						<div className="flex items-center gap-2 text-sm text-zinc-500 justify-between py-2 border-t">

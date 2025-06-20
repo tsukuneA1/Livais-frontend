@@ -1,4 +1,4 @@
-import { DetailPost } from "@/components/general/post/detailPost";
+import { DetailPostCard } from "@/components/general/post/detailPostCard";
 import { MainLayout } from "@/layouts/main/layout";
 
 type PostPageProps = {
@@ -10,7 +10,7 @@ const PostPage = async ({ params }: PostPageProps) => {
 
 	return (
 		<MainLayout>
-			<DetailPost id={id} />
+			<DetailPostCard id={id} />
 		</MainLayout>
 	);
 };

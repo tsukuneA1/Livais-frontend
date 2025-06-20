@@ -27,7 +27,7 @@ import { RepostButton } from "../repost/repostButton";
 import { UserIcon } from "../userIcon/userIcon";
 import { PostOptions } from "./postOptions";
 
-export const Post = ({ post }: { post: PostType }) => {
+export const PostCard = ({ post }: { post: PostType }) => {
 	const { user } = useUser();
 
 	const router = useRouter();

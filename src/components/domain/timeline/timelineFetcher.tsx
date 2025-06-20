@@ -1,7 +1,7 @@
 "use client";
 
 import { NewPost } from "@/app/posts/newPost";
-import { Post } from "@/components/general/post/post";
+import { PostCard } from "@/components/general/post/postCard";
 import { fetchTimeline } from "@/lib/api/post";
 import type { Post as PostType } from "@/types/post";
 import { useEffect, useState } from "react";
@@ -42,7 +42,7 @@ export const TimelineFetcher = () => {
 		<>
 			<NewPost />
 			{posts.map((post) => (
-				<Post key={post.id} post={post} />
+				<PostCard key={post.id} post={post} />
 			))}
 		</>
 	);

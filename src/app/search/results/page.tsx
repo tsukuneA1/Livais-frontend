@@ -117,11 +117,11 @@ const api = {
 };
 
 type SearchResultsPageProps = {
-	params: Promise<{ q?: string }>;
+	searchParams: Promise<{ q?: string }>;
 };
 
-const SearchResultsPage = async ({ params }: SearchResultsPageProps) => {
-	const resolvedSearchParams = await params;
+const SearchResultsPage = async ({ searchParams }: SearchResultsPageProps) => {
+	const resolvedSearchParams = await searchParams;
 	const query = resolvedSearchParams?.q || "";
 
 	if (!query) {

@@ -146,4 +146,5 @@ const noticeMessages: Partial<Record<NotifiableType, string>> = {
 	[NotifiableType.Repost]: "さんがあなたの投稿をリポストしました",
 	[NotifiableType.Reply]: "さんがあなたの投稿に返信しました",
 	[NotifiableType.Follow]: "さんがあなたをフォローしました",
+	[NotifiableType.Quote]: "さんがあなたの投稿を引用しました",
 };

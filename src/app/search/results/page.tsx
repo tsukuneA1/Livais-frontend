@@ -1,5 +1,5 @@
 import { PostCard } from "@/components/general/post/postCard";
-import { Card, CardContent } from "@/components/ui/card";
+import { UserCard } from "@/components/general/user/userCard";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Post } from "@/types/post";
 import { User } from "@/types/users";
@@ -87,6 +87,7 @@ const api = {
 				name: `${query}公式`,
 				email: "official@query.com",
 				password: "dummy_password",
+				isFollowing: false,
 				profile: {
 					id: 301,
 					userId: 201,
@@ -102,6 +103,7 @@ const api = {
 				name: `${query}専門家`,
 				email: "expert@query.dev",
 				password: "dummy_password",
+				isFollowing: false,
 				profile: {
 					id: 302,
 					userId: 202,
@@ -114,12 +116,13 @@ const api = {
 	},
 };
 
-const SearchResultsPage = async ({
-	searchParams,
-}: {
-	searchParams: { q?: string };
-}) => {
-	const query = searchParams.q || "";
+type SearchResultsPageProps = {
+	params: Promise<{ q?: string }>;
+};
+
+const SearchResultsPage = async ({ params }: SearchResultsPageProps) => {
+	const resolvedSearchParams = await params;
+	const query = resolvedSearchParams?.q || "";
 
 	if (!query) {
 		return (
@@ -146,7 +149,7 @@ const SearchResultsPage = async ({
 				<TabsList className="grid w-full grid-cols-3">
 					<TabsTrigger value="trending">話題</TabsTrigger>
 					<TabsTrigger value="latest">最新</TabsTrigger>
-					<TabsTrigger value="accounts">アカウント</TabsTrigger>
+					<TabsTrigger value="users">アカウント</TabsTrigger>
 				</TabsList>
 
 				<TabsContent value="trending">
@@ -175,11 +178,11 @@ const SearchResultsPage = async ({
 					</div>
 				</TabsContent>
 
-				<TabsContent value="accounts">
+				<TabsContent value="users">
 					<div className="space-y-4">
 						{relatedAccounts.length > 0 ? (
 							relatedAccounts.map((account) => (
-								<AccountCard key={account.id} account={account} />
+								<UserCard key={account.id} user={account} />
 							))
 						) : (
 							<p className="py-8 text-center text-muted-foreground">
@@ -192,26 +195,5 @@ const SearchResultsPage = async ({
 		</div>
 	);
 };
-
-function AccountCard({ account }: { account: User }) {
-	return (
-		<Card>
-			<CardContent className="pt-6">
-				<div className="flex items-start space-x-4">
-					<img
-						src={account.image}
-						alt={account.name}
-						className="h-14 w-14 rounded-full"
-					/>
-					<div className="flex-1">
-						<p className="font-bold">{account.name}</p>
-						<p className="text-sm text-muted-foreground">@{account.name}</p>
-						<p className="mt-2 text-sm">{account.profile.bio}</p>
-					</div>
-				</div>
-			</CardContent>
-		</Card>
-	);
-}
 
 export default SearchResultsPage;

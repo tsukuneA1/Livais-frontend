@@ -15,10 +15,12 @@ import { useState } from "react";
 type UserIconInfo = {
 	id: number;
 	image: string;
-	isFollowing: boolean;
+	isFollowing?: boolean;
 };
 
 export const UserIcon = ({ iconInfo }: { iconInfo: UserIconInfo }) => {
+	iconInfo.isFollowing ??= true;
+
 	const [isFollowing, setIsFollowing] = useState(iconInfo.isFollowing);
 	const handleFollow = async () => {
 		const res = await fetch("/api/follow", {

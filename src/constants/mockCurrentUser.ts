@@ -7,6 +7,7 @@ export const MOCK_CURRENT_USER: User = {
 	email: "christy_adams@reinger.example",
 	password: "password",
 	image: "https://robohash.org/doloribusmagniipsa.png?size=300x300&set=set1",
+	isFollowing: false,
 	profile: {
 		id: 1,
 		userId: 1,

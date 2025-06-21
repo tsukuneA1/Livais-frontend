@@ -21,4 +21,5 @@ export enum NotifiableType {
 	Repost = "Repost",
 	Reply = "Reply",
 	Follow = "Follow",
+	Quote = "Quote",
 }

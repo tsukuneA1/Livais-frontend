@@ -5,6 +5,7 @@ export type User = {
 	name: string;
 	email: string;
 	password: string;
+	isFollowing: boolean;
 	profile: {
 		id: number;
 		userId: number;

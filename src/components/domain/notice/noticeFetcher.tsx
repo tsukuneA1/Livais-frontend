@@ -37,6 +37,10 @@ export const NoticeFetcher = () => {
 		return <div>Error: {error}</div>;
 	}
 
+	if (notices.length === 0) {
+		return <div>通知はありません</div>;
+	}
+
 	return (
 		<div className="flex flex-col justify-center items-center">
 			{notices.map((notice) => (

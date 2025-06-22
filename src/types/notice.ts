@@ -4,7 +4,7 @@ export type Notice = {
 		id: number;
 		name: string;
 		image: string;
-		isFollowing: boolean;
+		isFollowing?: boolean;
 	};
 	post?: {
 		id: number;
@@ -21,4 +21,5 @@ export enum NotifiableType {
 	Repost = "Repost",
 	Reply = "Reply",
 	Follow = "Follow",
+	Quote = "Quote",
 }

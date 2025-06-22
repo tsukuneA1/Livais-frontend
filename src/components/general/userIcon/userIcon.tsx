@@ -19,7 +19,7 @@ type UserIconInfo = {
 };
 
 export const UserIcon = ({ iconInfo }: { iconInfo: UserIconInfo }) => {
-	const [canDirectAccess, setIsFollowing] = useState(
+	const [canDirectAccess, setCanDirectAccess] = useState(
 		iconInfo.canDirectAccess ?? true,
 	);
 	const handleFollow = async () => {
@@ -27,7 +27,7 @@ export const UserIcon = ({ iconInfo }: { iconInfo: UserIconInfo }) => {
 			method: "POST",
 			body: JSON.stringify({ user_id: iconInfo.id }),
 		});
-		setIsFollowing(res.ok);
+		setCanDirectAccess(res.ok);
 		if (res.ok) return;
 
 		alert("フォローに失敗しました");

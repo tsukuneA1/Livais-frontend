@@ -19,9 +19,7 @@ type UserIconInfo = {
 };
 
 export const UserIcon = ({ iconInfo }: { iconInfo: UserIconInfo }) => {
-	iconInfo.isFollowing ??= true;
-
-	const [isFollowing, setIsFollowing] = useState(iconInfo.isFollowing);
+	const [isFollowing, setIsFollowing] = useState(iconInfo.isFollowing ?? true);
 	const handleFollow = async () => {
 		const res = await fetch("/api/follow", {
 			method: "POST",

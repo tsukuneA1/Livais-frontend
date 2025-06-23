@@ -27,6 +27,26 @@ const buildSuffix = (url?: {
 };
 
 export const pagesPath = {
+	"@modal": {
+		___compose: {
+			post: {
+				$url: (url?: { hash?: string }) => ({
+					pathname: "/(.)compose/post" as const,
+					hash: url?.hash,
+					path: `/(.)compose/post${buildSuffix(url)}`,
+				}),
+			},
+		},
+	},
+	compose: {
+		post: {
+			$url: (url?: { hash?: string }) => ({
+				pathname: "/compose/post" as const,
+				hash: url?.hash,
+				path: `/compose/post${buildSuffix(url)}`,
+			}),
+		},
+	},
 	notice: {
 		$url: (url?: { hash?: string }) => ({
 			pathname: "/notice" as const,
@@ -52,6 +72,13 @@ export const pagesPath = {
 		},
 	},
 	search: {
+		results: {
+			$url: (url?: { hash?: string }) => ({
+				pathname: "/search/results" as const,
+				hash: url?.hash,
+				path: `/search/results${buildSuffix(url)}`,
+			}),
+		},
 		$url: (url?: { hash?: string }) => ({
 			pathname: "/search" as const,
 			hash: url?.hash,

@@ -15,17 +15,19 @@ import { useState } from "react";
 type UserIconInfo = {
 	id: number;
 	image: string;
-	isFollowing: boolean;
+	canDirectAccess?: boolean;
 };
 
 export const UserIcon = ({ iconInfo }: { iconInfo: UserIconInfo }) => {
-	const [isFollowing, setIsFollowing] = useState(iconInfo.isFollowing);
+	const [canDirectAccess, setCanDirectAccess] = useState(
+		iconInfo.canDirectAccess ?? true,
+	);
 	const handleFollow = async () => {
 		const res = await fetch("/api/follow", {
 			method: "POST",
 			body: JSON.stringify({ user_id: iconInfo.id }),
 		});
-		setIsFollowing(res.ok);
+		setCanDirectAccess(res.ok);
 		if (res.ok) return;
 
 		alert("フォローに失敗しました");
@@ -33,7 +35,7 @@ export const UserIcon = ({ iconInfo }: { iconInfo: UserIconInfo }) => {
 
 	const userPageLink = pagesPath.users._id(iconInfo.id).$url().path;
 
-	if (iconInfo.isFollowing) {
+	if (iconInfo.canDirectAccess) {
 		return (
 			<Link href={userPageLink} className="inline-block">
 				<Avatar className="top-0.5 border-1 border-gray-300">
@@ -55,7 +57,7 @@ export const UserIcon = ({ iconInfo }: { iconInfo: UserIconInfo }) => {
 				</Button>
 			</PopoverTrigger>
 			<PopoverContent align="start" className="m-0 flex flex-col divide-y p-0">
-				{isFollowing ? (
+				{canDirectAccess ? (
 					<Button
 						variant="ghost"
 						size="sm"

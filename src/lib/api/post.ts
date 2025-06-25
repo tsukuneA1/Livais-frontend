@@ -1,6 +1,6 @@
 import type { Post } from "@/types/post";
 
-export async function fetchTimeline(): Promise<Post[]> {
+export const fetchTimeline = async (): Promise<Post[]> => {
 	const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/posts`, {
 		cache: "no-store",
 		credentials: "include",
@@ -14,9 +14,9 @@ export async function fetchTimeline(): Promise<Post[]> {
 		throw new Error(`Failed to fetch timeline: ${res.statusText}`);
 	}
 	return await res.json();
-}
+};
 
-export async function fetchPostDetail(postId: string): Promise<Post> {
+export const fetchPostDetail = async (postId: string): Promise<Post> => {
 	const res = await fetch(
 		`${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/posts/${postId}`,
 		{
@@ -34,9 +34,9 @@ export async function fetchPostDetail(postId: string): Promise<Post> {
 	}
 
 	return await res.json();
-}
+};
 
-export async function createPost(content: string): Promise<void> {
+export const createPost = async (content: string): Promise<void> => {
 	const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/posts`, {
 		method: "POST",
 		headers: {
@@ -52,15 +52,15 @@ export async function createPost(content: string): Promise<void> {
 	if (!res.ok) {
 		throw new Error(`Failed to create post: ${res.statusText}`);
 	}
-}
+};
 
-export async function postReply({
+export const postReply = async ({
 	content,
 	replyToId,
 }: {
 	content: string;
 	replyToId: number;
-}): Promise<void> {
+}): Promise<void> => {
 	const res = await fetch(
 		`${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/posts/${replyToId}/replies`,
 		{
@@ -80,15 +80,15 @@ export async function postReply({
 	if (!res.ok) {
 		throw new Error(`Failed to post reply: ${res.statusText}`);
 	}
-}
+};
 
-export async function likePost({
+export const likePost = async ({
 	postId,
 	userId,
 }: {
 	postId: number;
 	userId: number | undefined;
-}): Promise<Post> {
+}): Promise<Post> => {
 	const res = await fetch(
 		`${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/posts/${postId}/likes`,
 		{
@@ -110,13 +110,13 @@ export async function likePost({
 	}
 
 	return await fetchPostDetail(postId.toString());
-}
+};
 
-export async function repost({
+export const repost = async ({
 	postId,
 }: {
 	postId: number;
-}): Promise<Post> {
+}): Promise<Post> => {
 	const res = await fetch(
 		`${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/posts/${postId}/reposts`,
 		{
@@ -137,7 +137,7 @@ export async function repost({
 	}
 
 	return await fetchPostDetail(postId.toString());
-}
+};
 
 export const quotePost = async ({
 	quotedPostId,

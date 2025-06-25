@@ -1,7 +1,7 @@
 "use client";
 
 import { fetchMe } from "@/lib/api/auth";
-import type { User } from "@/types/users";
+import type { User } from "@/types/user";
 import { createContext, useContext, useEffect, useState } from "react";
 
 type UserContextType = {

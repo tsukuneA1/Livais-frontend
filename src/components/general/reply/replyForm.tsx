@@ -25,7 +25,7 @@ import {
 } from "@/constants/visibilityOptions";
 import { postReply } from "@/lib/api/post";
 import type { PostDetail } from "@/types/post_detail";
-import type { User } from "@/types/users";
+import type { User } from "@/types/user";
 import { useMediaQuery } from "@mui/material";
 import {
 	CircleEllipsis,

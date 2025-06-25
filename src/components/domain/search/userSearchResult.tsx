@@ -25,7 +25,7 @@ export const UsersSearchResult = () => {
 		};
 
 		getSearchResult();
-	}, []);
+	}, [query]);
 
 	if (loading) {
 		return <div>Loading users...</div>;

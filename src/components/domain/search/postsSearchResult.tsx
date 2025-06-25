@@ -25,7 +25,7 @@ export const PostsSearchResult = () => {
 		};
 
 		getSearchResult();
-	}, []);
+	}, [query]);
 
 	if (loading) {
 		return <div>Loading posts...</div>;

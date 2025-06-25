@@ -42,5 +42,5 @@ export const searchUsers = async (query: string): Promise<Result<User[]>> => {
 	}
 
 	const data = await res.json();
-	return Ok(data);
+	return Ok(data as User[]);
 };

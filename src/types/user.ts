@@ -9,7 +9,7 @@ export type User = {
 	profile: {
 		id: number;
 		userId: number;
-		bio: string;
+		selfIntroduction: string;
 		createdAt: string;
 		updatedAt: string;
 	};

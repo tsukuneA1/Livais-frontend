@@ -1,4 +1,4 @@
-import type { User } from "@/types/users";
+import type { User } from "@/types/user";
 
 export const MOCK_CURRENT_USER: User = {
 	id: 1,
@@ -11,7 +11,7 @@ export const MOCK_CURRENT_USER: User = {
 	profile: {
 		id: 1,
 		userId: 1,
-		bio: "Eos ut cupiditate. Rerum vel nostrum.",
+		selfIntroduction: "Eos ut cupiditate. Rerum vel nostrum.",
 		createdAt: "2025-05-08T13:48:43.784Z",
 		updatedAt: "2025-05-08T13:48:43.784Z",
 	},

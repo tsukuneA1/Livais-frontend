@@ -1,4 +1,12 @@
 import { User } from "@/types/user";
+import { Result, Ok, Err } from "@/types/result";
+import { apiClient } from "./api-client";
+import {
+	SignupError,
+	SigninError,
+	GoogleAuthError,
+	UserFetchError,
+} from "@/types/api-errors";
 
 type SignUpParams = {
 	name: string;
@@ -6,99 +14,56 @@ type SignUpParams = {
 	password: string;
 };
 
-export const signup = async ({ name, email, password }: SignUpParams) => {
-	const res = await fetch(
-		`${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/auth/signup`,
-		{
-			method: "POST",
-			credentials: "include",
-			headers: {
-				"Content-Type": "application/json",
-			},
-			body: JSON.stringify({
-				user: {
-					name,
-					email,
-					password,
-					password_confirmation: password,
-					image: null,
-				},
-			}),
+type AuthResponse = {
+	token: string;
+	user: User;
+}
+
+export const signup = async ({ name, email, password }: SignUpParams): Promise<Result<AuthResponse>> => {
+	const result = await apiClient.post("/api/v1/auth/signup", {
+		user: {
+			name,
+			email,
+			password,
+			password_confirmation: password,
+			image: null,
 		},
-	);
+	}, { requireAuth: false });
 
-	const data = await res.json();
-
-	if (!res.ok) {
-		throw new Error(data.error || "サインアップ失敗");
+	if (!result.success) {
+		return Err(new SignupError(result.error.message));
 	}
 
-	return data;
+	return Ok(result.data as AuthResponse);
 };
 
-export const signin = async (email: string, password: string) => {
-	const res = await fetch(
-		`${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/auth/signin`,
-		{
-			method: "POST",
-			credentials: "include",
-			headers: {
-				"Content-Type": "application/json",
-			},
-			body: JSON.stringify({ email, password }),
-		},
-	);
+export const signin = async (email: string, password: string): Promise<Result<AuthResponse>> => {
+	const result = await apiClient.post("/api/v1/auth/signin", { email, password }, { requireAuth: false });
 
-	if (!res.ok) {
-		const error = await res.json();
-		throw new Error(error.message || "Signin failed");
+	if (!result.success) {
+		return Err(new SigninError(result.error.message));
 	}
 
-	return await res.json();
+	return Ok(result.data as AuthResponse);
 };
 
-export const signinWithGoogle = async (credential: string) => {
-	const res = await fetch(
-		`${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/auth/google`,
-		{
-			method: "POST",
-			headers: {
-				"Content-Type": "application/json",
-			},
-			body: JSON.stringify({
-				credential,
-			}),
-			credentials: "include",
-			cache: "no-store",
-		},
-	);
-	const data = await res.json();
-	if (!res.ok) {
-		throw new Error(data.error || "Googleサインアップ失敗");
+export const signinWithGoogle = async (credential: string): Promise<Result<AuthResponse>> => {
+	const result = await apiClient.post("/api/v1/auth/google", { credential }, { requireAuth: false });
+
+	if (!result.success) {
+		return Err(new GoogleAuthError(result.error.message));
 	}
-	return data;
+
+	return Ok(result.data as AuthResponse);
 };
 
-export const fetchMe = async (): Promise<User | null> => {
-	try {
-		const res = await fetch(
-			`${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/auth/me`,
-			{
-				headers: {
-					"Content-Type": "application/json",
-					Authorization: `Bearer ${localStorage.getItem("token") || ""}`,
-				},
-				credentials: "include",
-			},
-		);
-		if (res.ok) {
-			const data: User = await res.json();
-			return data;
-		} else {
-			throw new Error("ユーザー情報の取得に失敗");
-		}
-	} catch (error) {
-		console.error("Error fetching user data:", error);
-		throw new Error("ユーザー情報の取得に失敗");
+export const fetchMe = async (): Promise<Result<User | null>> => {
+	const result = await apiClient.get<User>("/api/v1/auth/me");
+
+	if (!result.success) {
+		console.error("Error fetching user data:", result.error);
+		return Err(new UserFetchError(result.error.message));
 	}
+
+	return Ok(result.data);
 };

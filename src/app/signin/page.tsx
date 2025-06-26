@@ -18,13 +18,14 @@ export default function SignInPage() {
 	const { setUser } = useUser();
 
 	const handleSignIn = async () => {
-		try {
-			const data = await signin(email, password);
-			setUser(data.user);
-			alert(`Welcome ${data.user.name}`);
+		const result = await signin(email, password);
+
+		if (result.success) {
+			setUser(result.data.user);
+			alert(`Welcome ${result.data.user.name}`);
 			window.location.href = "/";
-		} catch (err) {
-			alert(err instanceof Error ? err.message : "サインインに失敗しました");
+		}else {
+			throw result.error;
 		}
 	};
 
@@ -103,16 +104,18 @@ export default function SignInPage() {
 						<GoogleLogin
 							onSuccess={async (credentialResponse: CredentialResponse) => {
 								if (credentialResponse.credential) {
-									try {
-										const data = await signinWithGoogle(
-											credentialResponse.credential,
-										);
-										localStorage.setItem("token", data.token);
-										setUser(data.user);
-										alert(`Googleでようこそ ${data.user.name}`);
+									const result = await signinWithGoogle(
+										credentialResponse.credential,
+									);
+
+									if (result.success) {
+										localStorage.setItem("token", result.data.token);
+										setUser(result.data.user);
+										alert(`Googleでようこそ ${result.data.user.name}`);
 										window.location.href = "/";
-									} catch {
-										alert("Googleログインに失敗しました");
+										return;
+									}else {
+										throw result.error;
 									}
 								}
 							}}

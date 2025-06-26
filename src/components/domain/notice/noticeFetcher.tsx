@@ -12,18 +12,13 @@ export const NoticeFetcher = () => {
 
 	useEffect(() => {
 		const getNotices = async () => {
-			try {
-				const fetchedNotices = await fetchNotice();
-				setNotices(fetchedNotices);
-			} catch (err) {
-				if (err instanceof Error) {
-					setError(err.message);
-				} else {
-					setError("Failed to fetch notices: An unknown error occurred.");
-				}
-			} finally {
-				setLoading(false);
+			const result = await fetchNotice();
+			if (result.success) {
+				setNotices(result.data);
+			} else {
+				setError(result.error.message);
 			}
+			setLoading(false);
 		};
 
 		getNotices();

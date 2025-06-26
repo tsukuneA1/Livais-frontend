@@ -20,11 +20,11 @@ export const DetailPostCard = ({ id }: Props) => {
 
 	useEffect(() => {
 		const getPost = async () => {
-			try {
-				const fetchedPost = await fetchPostDetail(id);
-				setPost(fetchedPost);
-			} catch (error) {
-				console.error("Failed to fetch post:", error);
+			const result = await fetchPostDetail(id);
+			if (result.success) {
+				setPost(result.data);
+			} else {
+				console.error("Failed to fetch post:", result.error.message);
 			}
 		};
 

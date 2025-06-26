@@ -20,14 +20,16 @@ export default function SignUpPage() {
 
 	const handleSignup = async (e: React.FormEvent) => {
 		e.preventDefault();
-		try {
-			const data = await signup({ name, email, password });
-			localStorage.setItem("token", data.token);
-			alert("サインアップ成功");
-		} catch (err) {
-			if (err instanceof Error) {
-				alert(`エラー: ${err.message}`);
-			}
+
+		const result = await signup({ name, email, password });
+
+		if (result.success) {
+			localStorage.setItem("token", result.data.token);
+			setUser(result.data.user);
+			alert(`ようこそ ${result.data.user.name}`);
+			window.location.href = "/";
+		} else {
+			alert(`サインアップエラー: ${result.error.message}`);
 		}
 	};
 
@@ -113,16 +115,16 @@ export default function SignUpPage() {
 						<GoogleLogin
 							onSuccess={async (credentialResponse: CredentialResponse) => {
 								if (credentialResponse.credential) {
-									try {
-										const data = await signinWithGoogle(
-											credentialResponse.credential,
-										);
-										localStorage.setItem("token", data.token);
-										setUser(data.user);
-										alert(`Googleでようこそ ${data.user.name}`);
+									const result = await signinWithGoogle(
+										credentialResponse.credential,
+									);
+									if (result.success) {
+										localStorage.setItem("token", result.data.token);
+										setUser(result.data.user);
+										alert(`Googleでようこそ ${result.data.user.name}`);
 										window.location.href = "/";
-									} catch {
-										alert("Googleログインに失敗しました");
+									} else {
+										alert(`Googleログインエラー: ${result.error.message}`);
 									}
 								}
 							}}

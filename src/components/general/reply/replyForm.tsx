@@ -54,22 +54,18 @@ export default function ReplyForm({ user, replyToPost }: Props) {
 	);
 
 	const handleSubmit = async () => {
-		const replyData = async () => {
-			await postReply({
-				content: content,
-				replyToId: replyToPost.id,
-			});
-		};
-
-		toast.promise(replyData(), {
-			loading: "投稿中...",
-			success: () => {
-				setContent("");
-				location.reload();
-				return "投稿しました！";
-			},
-			error: "投稿に失敗しました...",
+		const result = await postReply({
+			content: content,
+			replyToId: replyToPost.id,
 		});
+
+		if (result.success) {
+			setContent("");
+			location.reload();
+			toast.success("投稿しました！");
+		} else {
+			toast.error(`投稿に失敗しました: ${result.error.message}`);
+		}
 	};
 
 	if (isDesktop) {

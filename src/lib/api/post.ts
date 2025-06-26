@@ -1,57 +1,44 @@
 import type { Post } from "@/types/post";
+import { Result, Ok, Err } from "@/types/result";
+import { apiClient } from "./api-client";
+import {
+	TimelineFetchError,
+	PostFetchError,
+	PostCreateError,
+	ReplyPostError,
+	LikePostError,
+	RepostError,
+	QuotePostError,
+} from "@/types/api-errors";
 
-export const fetchTimeline = async (): Promise<Post[]> => {
-	const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/posts`, {
-		cache: "no-store",
-		credentials: "include",
-		headers: {
-			"Content-Type": "application/json",
-			Authorization: `Bearer ${localStorage.getItem("token") || ""}`,
-		},
-	});
+export const fetchTimeline = async (): Promise<Result<Post[]>> => {
+	const result = await apiClient.get<Post[]>("/api/v1/posts");
 
-	if (!res.ok) {
-		throw new Error(`Failed to fetch timeline: ${res.statusText}`);
+	if (!result.success) {
+		return Err(new TimelineFetchError(result.error.message));
 	}
-	return await res.json();
+
+	return Ok(result.data);
 };
 
-export const fetchPostDetail = async (postId: string): Promise<Post> => {
-	const res = await fetch(
-		`${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/posts/${postId}`,
-		{
-			headers: {
-				"Content-Type": "application/json",
-				Authorization: `Bearer ${localStorage.getItem("token") || ""}`,
-			},
-			cache: "no-store",
-			credentials: "include",
-		},
-	);
+export const fetchPostDetail = async (postId: string): Promise<Result<Post>> => {
+	const result = await apiClient.get<Post>(`/api/v1/posts/${postId}`);
 
-	if (!res.ok) {
-		throw new Error(`Failed to fetch post with id: ${postId}`);
+	if (!result.success) {
+		return Err(new PostFetchError(result.error.message));
 	}
 
-	return await res.json();
+	return Ok(result.data);
 };
 
-export const createPost = async (content: string): Promise<void> => {
-	const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/posts`, {
-		method: "POST",
-		headers: {
-			"Content-Type": "application/json",
-			Authorization: `Bearer ${localStorage.getItem("token") || ""}`,
-		},
-		credentials: "include",
-		body: JSON.stringify({
-			content,
-		}),
-	});
+export const createPost = async (content: string): Promise<Result<void>> => {
+	const result = await apiClient.post<void>("/api/v1/posts", { content });
 
-	if (!res.ok) {
-		throw new Error(`Failed to create post: ${res.statusText}`);
+	if (!result.success) {
+		return Err(new PostCreateError(result.error.message));
 	}
+
+	return Ok(undefined);
 };
 
 export const postReply = async ({
@@ -60,26 +47,17 @@ export const postReply = async ({
 }: {
 	content: string;
 	replyToId: number;
-}): Promise<void> => {
-	const res = await fetch(
-		`${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/posts/${replyToId}/replies`,
-		{
-			method: "POST",
-			headers: {
-				"Content-Type": "application/json",
-				Authorization: `Bearer ${localStorage.getItem("token") || ""}`,
-			},
-			credentials: "include",
-			body: JSON.stringify({
-				content,
-				reply_to_id: replyToId,
-			}),
-		},
-	);
+}): Promise<Result<void>> => {
+	const result = await apiClient.post<void>(`/api/v1/posts/${replyToId}/replies`, {
+		content,
+		reply_to_id: replyToId,
+	});
 
-	if (!res.ok) {
-		throw new Error(`Failed to post reply: ${res.statusText}`);
+	if (!result.success) {
+		return Err(new ReplyPostError(result.error.message));
 	}
+
+	return Ok(undefined);
 };
 
 export const likePost = async ({
@@ -88,55 +66,35 @@ export const likePost = async ({
 }: {
 	postId: number;
 	userId: number | undefined;
-}): Promise<Post> => {
-	const res = await fetch(
-		`${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/posts/${postId}/likes`,
-		{
-			method: "POST",
-			headers: {
-				"Content-Type": "application/json",
-				Authorization: `Bearer ${localStorage.getItem("token") || ""}`,
-			},
-			credentials: "include",
-			body: JSON.stringify({
-				user_id: userId,
-				post_id: postId,
-			}),
-		},
-	);
+}): Promise<Result<Post>> => {
+	const result = await apiClient.post<void>(`/api/v1/posts/${postId}/likes`, {
+		user_id: userId,
+		post_id: postId,
+	});
 
-	if (!res.ok) {
-		throw new Error(`Failed to like post: ${res.statusText}`);
+	if (!result.success) {
+		return Err(new LikePostError(result.error.message));
 	}
 
-	return await fetchPostDetail(postId.toString());
+	const postResult = await fetchPostDetail(postId.toString());
+	return postResult;
 };
 
 export const repost = async ({
 	postId,
 }: {
 	postId: number;
-}): Promise<Post> => {
-	const res = await fetch(
-		`${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/posts/${postId}/reposts`,
-		{
-			method: "POST",
-			headers: {
-				"Content-Type": "application/json",
-				Authorization: `Bearer ${localStorage.getItem("token") || ""}`,
-			},
-			credentials: "include",
-			body: JSON.stringify({
-				post_id: postId,
-			}),
-		},
-	);
+}): Promise<Result<Post>> => {
+	const result = await apiClient.post<void>(`/api/v1/posts/${postId}/reposts`, {
+		post_id: postId,
+	});
 
-	if (!res.ok) {
-		throw new Error(`Failed to repost: ${res.statusText}`);
+	if (!result.success) {
+		return Err(new RepostError(result.error.message));
 	}
 
-	return await fetchPostDetail(postId.toString());
+	const postResult = await fetchPostDetail(postId.toString());
+	return postResult;
 };
 
 export const quotePost = async ({
@@ -145,23 +103,15 @@ export const quotePost = async ({
 }: {
 	quotedPostId: number;
 	content: string;
-}): Promise<Post> => {
-	const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/posts`, {
-		method: "POST",
-		headers: {
-			"Content-Type": "application/json",
-			Authorization: `Bearer ${localStorage.getItem("token") || ""}`,
-		},
-		credentials: "include",
-		body: JSON.stringify({
-			content: content,
-			quoted_post_id: quotedPostId,
-		}),
+}): Promise<Result<Post>> => {
+	const result = await apiClient.post<Post>("/api/v1/posts", {
+		content: content,
+		quoted_post_id: quotedPostId,
 	});
 
-	if (!res.ok) {
-		throw new Error(`Failed to quote post: ${res.statusText}`);
+	if (!result.success) {
+		return Err(new QuotePostError(result.error.message));
 	}
 
-	return await res.json();
+	return Ok(result.data);
 };

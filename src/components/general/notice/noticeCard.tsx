@@ -35,11 +35,11 @@ export const NoticeCard = ({ notice }: { notice: Notice }) => {
 		: pagesPath.users._id(notice.user.id).$url().path;
 
 	const handleHideNotice = async (id: number) => {
-		try {
-			await hideNotice(id);
+		const result = await hideNotice(id);
+		if (result.success) {
 			setIsHidden(true);
-		} catch (error) {
-			console.error("Failed to hide notice:", error);
+		} else {
+			console.error("Failed to hide notice:", result.error.message);
 		}
 	};
 

@@ -1,10 +1,10 @@
 "use client";
 
+import { pagesPath } from "@/lib/$path";
 import { fetchMe } from "@/lib/api/auth";
 import type { User } from "@/types/user";
+import { usePathname, useRouter } from "next/navigation";
 import { createContext, useContext, useEffect, useState } from "react";
-import { useRouter, usePathname } from "next/navigation";
-import { pagesPath } from "@/lib/$path";
 
 type UserContextType = {
 	user: User | null;
@@ -30,7 +30,7 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
 			}
 
 			const token = localStorage.getItem("token");
-			
+
 			if (!token) {
 				router.push(signinPath);
 				setIsLoading(false);
@@ -38,14 +38,14 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
 			}
 
 			const result = await fetchMe();
-			
+
 			if (result.success) {
 				setUser(result.data);
 			} else {
 				localStorage.removeItem("token");
 				router.push(signinPath);
 			}
-			
+
 			setIsLoading(false);
 		};
 

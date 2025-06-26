@@ -1,15 +1,15 @@
-import type { Post } from "@/types/post";
-import { Result, Ok, Err } from "@/types/result";
-import { apiClient } from "./api-client";
 import {
-	TimelineFetchError,
-	PostFetchError,
-	PostCreateError,
-	ReplyPostError,
 	LikePostError,
-	RepostError,
+	PostCreateError,
+	PostFetchError,
 	QuotePostError,
+	ReplyPostError,
+	RepostError,
+	TimelineFetchError,
 } from "@/types/api-errors";
+import type { Post } from "@/types/post";
+import { Err, Ok, Result } from "@/types/result";
+import { apiClient } from "./api-client";
 
 export const fetchTimeline = async (): Promise<Result<Post[]>> => {
 	const result = await apiClient.get<Post[]>("/api/v1/posts");
@@ -21,7 +21,9 @@ export const fetchTimeline = async (): Promise<Result<Post[]>> => {
 	return Ok(result.data);
 };
 
-export const fetchPostDetail = async (postId: string): Promise<Result<Post>> => {
+export const fetchPostDetail = async (
+	postId: string,
+): Promise<Result<Post>> => {
 	const result = await apiClient.get<Post>(`/api/v1/posts/${postId}`);
 
 	if (!result.success) {
@@ -48,10 +50,13 @@ export const postReply = async ({
 	content: string;
 	replyToId: number;
 }): Promise<Result<void>> => {
-	const result = await apiClient.post<void>(`/api/v1/posts/${replyToId}/replies`, {
-		content,
-		reply_to_id: replyToId,
-	});
+	const result = await apiClient.post<void>(
+		`/api/v1/posts/${replyToId}/replies`,
+		{
+			content,
+			reply_to_id: replyToId,
+		},
+	);
 
 	if (!result.success) {
 		return Err(new ReplyPostError(result.error.message));

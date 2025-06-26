@@ -56,7 +56,7 @@ export const NewPost = () => {
 
 	const handleSubmit = async () => {
 		const result = await createPost(content);
-		
+
 		if (result.success) {
 			setContent("");
 			toast.success("投稿しました！");

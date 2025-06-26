@@ -33,7 +33,7 @@ export const RepostButton = ({
 	const handleRepost = async () => {
 		const prevReposted = reposted;
 		const prevReposts = reposts;
-		
+
 		// Optimistic update
 		setReposted(!reposted);
 		setReposts((prev) => (reposted ? prev - 1 : prev + 1));

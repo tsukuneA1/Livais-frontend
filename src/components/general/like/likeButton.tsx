@@ -27,7 +27,7 @@ export const LikeButton = ({
 	const handleLike = async () => {
 		const prevLiked = liked;
 		const prevLikes = likes;
-		
+
 		setLiked(!liked);
 		setLikes((prev) => (liked ? prev - 1 : prev + 1));
 		setIsAnimating(true);

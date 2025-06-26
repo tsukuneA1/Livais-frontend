@@ -24,7 +24,7 @@ export default function SignInPage() {
 			setUser(result.data.user);
 			alert(`Welcome ${result.data.user.name}`);
 			window.location.href = "/";
-		}else {
+		} else {
 			throw result.error;
 		}
 	};
@@ -114,7 +114,7 @@ export default function SignInPage() {
 										alert(`Googleでようこそ ${result.data.user.name}`);
 										window.location.href = "/";
 										return;
-									}else {
+									} else {
 										throw result.error;
 									}
 								}

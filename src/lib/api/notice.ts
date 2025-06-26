@@ -1,7 +1,7 @@
-import { Notice } from "@/types/notice";
-import { Result, Ok, Err } from "@/types/result";
-import { apiClient } from "./api-client";
 import { NoticeFetchError, NoticeHideError } from "@/types/api-errors";
+import { Notice } from "@/types/notice";
+import { Err, Ok, Result } from "@/types/result";
+import { apiClient } from "./api-client";
 
 export async function fetchNotice(): Promise<Result<Notice[]>> {
 	const result = await apiClient.get<Notice[]>("/api/v1/notice/");

@@ -1,12 +1,12 @@
-import { User } from "@/types/user";
-import { Result, Ok, Err } from "@/types/result";
-import { apiClient } from "./api-client";
 import {
-	SignupError,
-	SigninError,
 	GoogleAuthError,
+	SigninError,
+	SignupError,
 	UserFetchError,
 } from "@/types/api-errors";
+import { Err, Ok, Result } from "@/types/result";
+import { User } from "@/types/user";
+import { apiClient } from "./api-client";
 
 type SignUpParams = {
 	name: string;
@@ -17,18 +17,26 @@ type SignUpParams = {
 type AuthResponse = {
 	token: string;
 	user: User;
-}
+};
 
-export const signup = async ({ name, email, password }: SignUpParams): Promise<Result<AuthResponse>> => {
-	const result = await apiClient.post("/api/v1/auth/signup", {
-		user: {
-			name,
-			email,
-			password,
-			password_confirmation: password,
-			image: null,
+export const signup = async ({
+	name,
+	email,
+	password,
+}: SignUpParams): Promise<Result<AuthResponse>> => {
+	const result = await apiClient.post(
+		"/api/v1/auth/signup",
+		{
+			user: {
+				name,
+				email,
+				password,
+				password_confirmation: password,
+				image: null,
+			},
 		},
-	}, { requireAuth: false });
+		{ requireAuth: false },
+	);
 
 	if (!result.success) {
 		return Err(new SignupError(result.error.message));
@@ -37,8 +45,15 @@ export const signup = async ({ name, email, password }: SignUpParams): Promise<R
 	return Ok(result.data as AuthResponse);
 };
 
-export const signin = async (email: string, password: string): Promise<Result<AuthResponse>> => {
-	const result = await apiClient.post("/api/v1/auth/signin", { email, password }, { requireAuth: false });
+export const signin = async (
+	email: string,
+	password: string,
+): Promise<Result<AuthResponse>> => {
+	const result = await apiClient.post(
+		"/api/v1/auth/signin",
+		{ email, password },
+		{ requireAuth: false },
+	);
 
 	if (!result.success) {
 		return Err(new SigninError(result.error.message));
@@ -47,8 +62,14 @@ export const signin = async (email: string, password: string): Promise<Result<Au
 	return Ok(result.data as AuthResponse);
 };
 
-export const signinWithGoogle = async (credential: string): Promise<Result<AuthResponse>> => {
-	const result = await apiClient.post("/api/v1/auth/google", { credential }, { requireAuth: false });
+export const signinWithGoogle = async (
+	credential: string,
+): Promise<Result<AuthResponse>> => {
+	const result = await apiClient.post(
+		"/api/v1/auth/google",
+		{ credential },
+		{ requireAuth: false },
+	);
 
 	if (!result.success) {
 		return Err(new GoogleAuthError(result.error.message));

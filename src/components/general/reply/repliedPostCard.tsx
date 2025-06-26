@@ -13,11 +13,11 @@ export const RepliedPostCard = ({
 
 	useEffect(() => {
 		const fetchParent = async () => {
-			try {
-				const res = await fetchPostDetail(repliedPostId.toString());
-				setParentPost(res);
-			} catch (error) {
-				console.error("Failed to fetch post details:", error);
+			const result = await fetchPostDetail(repliedPostId.toString());
+			if (result.success) {
+				setParentPost(result.data);
+			} else {
+				console.error("Failed to fetch post details:", result.error.message);
 				setParentPost(null);
 			}
 		};

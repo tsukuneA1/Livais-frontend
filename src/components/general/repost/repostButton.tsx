@@ -31,12 +31,22 @@ export const RepostButton = ({
 	const [popoverOpen, setPopoverOpen] = useState(false);
 
 	const handleRepost = async () => {
+		const prevReposted = reposted;
+		const prevReposts = reposts;
+
+		// Optimistic update
 		setReposted(!reposted);
 		setReposts((prev) => (reposted ? prev - 1 : prev + 1));
-
 		setIsAnimating(true);
 		setTimeout(() => setIsAnimating(false), 500);
-		await repost({ postId: postId });
+
+		const result = await repost({ postId: postId });
+		if (!result.success) {
+			// Revert optimistic update on error
+			setReposted(prevReposted);
+			setReposts(prevReposts);
+			console.error("Failed to repost:", result.error.message);
+		}
 	};
 
 	return (

@@ -34,7 +34,17 @@ export const fetchPostDetail = async (
 };
 
 export const createPost = async (content: string): Promise<Result<void>> => {
+	console.log("createPost called with content:", content);
+	console.log("Making API call to /api/v1/posts");
+	
 	const result = await apiClient.post<void>("/api/v1/posts", { content });
+	
+	console.log("API call result:", result);
+	console.log("Result success:", result.success);
+	if (!result.success) {
+		console.log("API error:", result.error);
+		console.log("Error message:", result.error.message);
+	}
 
 	if (!result.success) {
 		return Err(new PostCreateError(result.error.message));

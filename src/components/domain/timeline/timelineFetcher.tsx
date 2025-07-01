@@ -13,18 +13,14 @@ export const TimelineFetcher = () => {
 
 	useEffect(() => {
 		const getTimeline = async () => {
-			try {
-				const fetchedPosts = await fetchTimeline();
-				setPosts(fetchedPosts);
-			} catch (err: unknown) {
-				if (err instanceof Error) {
-					setError(err.message);
-				} else {
-					setError("Failed to fetch posts: An unknown error occurred.");
-				}
-			} finally {
-				setLoading(false);
+			const result = await fetchTimeline();
+			if (result.success) {
+				setPosts(result.data);
+				setError(null);
+			} else {
+				setError(result.error.message);
 			}
+			setLoading(false);
 		};
 
 		getTimeline();

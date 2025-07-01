@@ -57,10 +57,18 @@ export const PostCreationDialog = () => {
 		if (quoteId) {
 			setIsLoading(true);
 
-			fetchPostDetail(quoteId)
-				.then(setQuotedPost)
-				.catch(console.error)
-				.finally(() => setIsLoading(false));
+			const loadQuotedPost = async () => {
+				const result = await fetchPostDetail(quoteId);
+				if (result.success) {
+					setQuotedPost(result.data);
+				} else {
+					console.error("Failed to fetch quoted post:", result.error.message);
+					toast.error("引用する投稿の読み込みに失敗しました。");
+				}
+				setIsLoading(false);
+			};
+
+			loadQuotedPost();
 		}
 	}, [quoteId]);
 
@@ -70,30 +78,27 @@ export const PostCreationDialog = () => {
 		}, 1000);
 	};
 
-	const handleSubmit = () => {
+	const handleSubmit = async () => {
 		if (!quotedPost) {
 			toast.error("引用する投稿が見つかりません。");
 			return;
 		}
 
 		setIsSubmitting(true);
-		toast.promise(
-			quotePost({
-				content,
-				quotedPostId: quotedPost.id,
-			}),
-			{
-				loading: "投稿中...",
-				success: () => {
-					setContent("");
-					handleClose();
-					router.refresh();
-					return "投稿しました！";
-				},
-				error: "投稿に失敗しました...",
-				finally: () => setIsSubmitting(false),
-			},
-		);
+		const result = await quotePost({
+			content,
+			quotedPostId: quotedPost.id,
+		});
+
+		if (result.success) {
+			setContent("");
+			toast.success("投稿しました！");
+			handleClose();
+			router.refresh();
+		} else {
+			toast.error(`投稿に失敗しました: ${result.error.message}`);
+		}
+		setIsSubmitting(false);
 	};
 
 	return (

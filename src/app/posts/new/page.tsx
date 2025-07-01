@@ -47,21 +47,17 @@ const PostFormPage = () => {
 	const router = useRouter();
 
 	const handleSubmit = async () => {
-		const postData = async () => {
-			await createPost(content);
-		};
+		const result = await createPost(content);
 
-		toast.promise(postData(), {
-			loading: "投稿中...",
-			success: () => {
-				setContent("");
-				setTimeout(() => {
-					router.push(pagesPath.$url().pathname);
-				}, 1000);
-				return "投稿しました！";
-			},
-			error: "投稿に失敗しました...",
-		});
+		if (result.success) {
+			setContent("");
+			toast.success("投稿しました！");
+			setTimeout(() => {
+				router.push(pagesPath.$url().pathname);
+			}, 1000);
+		} else {
+			toast.error(`投稿に失敗しました: ${result.error.message}`);
+		}
 	};
 
 	return (

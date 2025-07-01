@@ -25,12 +25,20 @@ export const LikeButton = ({
 	const [isAnimating, setIsAnimating] = useState(false);
 
 	const handleLike = async () => {
+		const prevLiked = liked;
+		const prevLikes = likes;
+
 		setLiked(!liked);
 		setLikes((prev) => (liked ? prev - 1 : prev + 1));
-
 		setIsAnimating(true);
 		setTimeout(() => setIsAnimating(false), 500);
-		await likePost({ postId: postId, userId: userId });
+
+		const result = await likePost({ postId: postId, userId: userId });
+		if (!result.success) {
+			setLiked(prevLiked);
+			setLikes(prevLikes);
+			console.error("Failed to like post:", result.error.message);
+		}
 	};
 
 	return (

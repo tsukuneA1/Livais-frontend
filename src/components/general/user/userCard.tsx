@@ -1,7 +1,7 @@
 import { UserIcon } from "@/components/general/userIcon/userIcon";
 import { Card, CardContent } from "@/components/ui/card";
 import { pagesPath } from "@/lib/$path";
-import { User } from "@/types/users";
+import { User } from "@/types/user";
 import Link from "next/link";
 
 export const UserCard = ({ user }: { user: User }) => {
@@ -14,7 +14,7 @@ export const UserCard = ({ user }: { user: User }) => {
 						<div className="flex-1">
 							<p className="font-bold">{user.name}</p>
 							<p className="text-sm text-muted-foreground">@{user.name}</p>
-							<p className="mt-2 text-sm">{user.profile.bio}</p>
+							<p className="mt-2 text-sm">{user.profile.selfIntroduction}</p>
 						</div>
 					</div>
 				</CardContent>

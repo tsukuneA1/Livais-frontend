@@ -11,8 +11,10 @@ import type { Post } from "@/types/post";
 import { Err, Ok, Result } from "@/types/result";
 import { apiClient } from "./api-client";
 
-export const fetchTimeline = async (): Promise<Result<Post[]>> => {
-	const result = await apiClient.get<Post[]>("/api/v1/posts");
+export const fetchTimeline = async (
+	tab: string = "default",
+): Promise<Result<Post[]>> => {
+	const result = await apiClient.get<Post[]>(`/api/v1/?tab=${tab}`);
 
 	if (!result.success) {
 		return Err(new TimelineFetchError(result.error.message));

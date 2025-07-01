@@ -41,7 +41,7 @@ export class ApiClient {
 
 	private getAuthHeaders(): Record<string, string> {
 		let token: string | null = null;
-		
+
 		if (typeof window !== "undefined") {
 			// Client-side: use localStorage
 			token = localStorage.getItem("token");
@@ -49,7 +49,7 @@ export class ApiClient {
 			// Server-side: use global variable
 			token = (global as any).__authToken || null;
 		}
-		
+
 		return token ? { Authorization: `Bearer ${token}` } : {};
 	}
 
@@ -105,13 +105,6 @@ export class ApiClient {
 				...headers,
 			};
 
-			console.log("API Client making request:");
-			console.log("  URL:", url);
-			console.log("  Method:", method);
-			console.log("  Headers:", requestHeaders);
-			console.log("  Body:", body);
-			console.log("  Require Auth:", requireAuth);
-
 			const requestInit: RequestInit = {
 				method,
 				headers: requestHeaders,
@@ -127,14 +120,7 @@ export class ApiClient {
 				}
 			}
 
-			console.log("  Final request init:", requestInit);
-
 			const response = await fetch(url, requestInit);
-			
-			console.log("Response received:");
-			console.log("  Status:", response.status);
-			console.log("  Status text:", response.statusText);
-			console.log("  OK:", response.ok);
 
 			if (!response.ok) {
 				let errorMessage = `HTTP ${response.status}: ${response.statusText}`;
@@ -152,23 +138,15 @@ export class ApiClient {
 			const data = await response.json();
 			return Ok(data as T);
 		} catch (error) {
-			console.error("API Client catch block error:", error);
-			console.error("Error type:", typeof error);
-			console.error("Error constructor:", error?.constructor?.name);
-			console.error("Error message:", error instanceof Error ? error.message : error);
-			console.error("Error stack:", error instanceof Error ? error.stack : "No stack trace");
-			
 			if (error instanceof TypeError && error.message.includes("fetch")) {
-				console.log("Network error detected");
 				return Err(new NetworkError("ネットワーク接続に失敗しました"));
 			}
-			
-			const apiError = error instanceof ApiError
-				? error
-				: new ApiError(`予期しないエラーが発生しました: ${error instanceof Error ? error.message : String(error)}`);
-			
-			console.log("Returning API error:", apiError);
-			return Err(apiError);
+
+			return Err(
+				error instanceof ApiError
+					? error
+					: new ApiError("予期しないエラーが発生しました"),
+			);
 		}
 	}
 

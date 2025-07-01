@@ -214,9 +214,7 @@ export const executeApiTool = async (
 	args: Record<string, unknown>,
 	token?: string,
 ) => {
-	// Store the token globally for this request
 	if (token && typeof window === "undefined") {
-		// Server-side: store token in global variable for API client to use
 		(global as any).__authToken = token;
 	}
 	switch (name) {

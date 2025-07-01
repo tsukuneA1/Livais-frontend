@@ -7,23 +7,10 @@ interface ChatMessage {
 	userId?: number;
 }
 
-let llmProcessor: LLMProcessor | null = null;
-
-try {
-	if (process.env.OPENAI_API_KEY) {
-		const apiKeyPreview = process.env.OPENAI_API_KEY.substring(0, 10) + "...";
-		console.log("OpenAI API key found:", apiKeyPreview);
-		llmProcessor = new LLMProcessor({
-			apiKey: process.env.OPENAI_API_KEY,
-			model: "gpt-3.5-turbo",
-		});
-		console.log("LLM Processor initialized with OpenAI API key");
-	} else {
-		console.log("No OpenAI API key found, will use fallback processing");
-	}
-} catch (error) {
-	console.error("Failed to initialize LLM Processor:", error);
-}
+const llmProcessor = new LLMProcessor({
+	apiKey: process.env.OPENAI_API_KEY || "",
+	model: "gpt-3.5-turbo",
+});
 
 export async function POST(request: NextRequest) {
 	let message: string | undefined;
@@ -34,10 +21,8 @@ export async function POST(request: NextRequest) {
 		message = body.message;
 		userId = body.userId;
 
-		// Get authorization token from headers
 		const authHeader = request.headers.get("authorization");
 		const token = authHeader?.replace("Bearer ", "");
-		console.log("Auth token received:", token ? "Yes" : "No");
 
 		if (!message) {
 			return NextResponse.json(
@@ -47,8 +32,6 @@ export async function POST(request: NextRequest) {
 		}
 
 		if (!llmProcessor) {
-			// Fallback to simple pattern matching if no OpenAI API key or LLM processor failed to initialize
-			console.log("Using fallback processing (no LLM processor available)");
 			const response = await processNaturalLanguageRequestFallback(
 				message,
 				userId,
@@ -57,37 +40,28 @@ export async function POST(request: NextRequest) {
 			return NextResponse.json({ message: response });
 		}
 
-		console.log("Using LLM processor for message:", message);
 		const response = await llmProcessor.processMessage(message, userId, token);
 
 		return NextResponse.json({ message: response });
 	} catch (error) {
 		console.error("Chat API error:", error);
-		console.error("Error stack:", error instanceof Error ? error.stack : "No stack trace");
-		console.error("Error message:", error instanceof Error ? error.message : error);
-
-		// If we have the message, try fallback processing
-		const authHeader = request.headers.get("authorization");
-		const token = authHeader?.replace("Bearer ", "");
-		
 		if (message) {
 			try {
-				console.log("Attempting fallback processing for message:", message);
+				const authHeader = request.headers.get("authorization");
+				const token = authHeader?.replace("Bearer ", "");
 				const fallbackResponse = await processNaturalLanguageRequestFallback(
 					message,
 					userId,
 					token,
 				);
-				console.log("Fallback response:", fallbackResponse);
 				return NextResponse.json({ message: fallbackResponse });
 			} catch (fallbackError) {
 				console.error("Fallback processing failed:", fallbackError);
-				console.error("Fallback error stack:", fallbackError instanceof Error ? fallbackError.stack : "No stack trace");
 			}
 		}
 
 		return NextResponse.json(
-			{ error: "Internal server error", details: error instanceof Error ? error.message : String(error) },
+			{ error: "Internal server error" },
 			{ status: 500 },
 		);
 	}
@@ -104,19 +78,15 @@ async function processNaturalLanguageRequestFallback(
 		const content = extractContentFromMessage(message, "投稿");
 		if (content) {
 			try {
-				console.log("Attempting to create post with content:", content);
 				const result = await executeApiTool("createPost", { content }, token);
-				console.log("createPost result:", result);
 				if (result.success) {
 					return `投稿を作成しました: "${content}"`;
 				} else {
-					console.error("Post creation failed:", result.error);
 					return `投稿の作成に失敗しました: ${result.error?.message}`;
 				}
 			} catch (error) {
 				console.error("Error during post creation:", error);
-				console.error("Error stack:", error instanceof Error ? error.stack : "No stack trace");
-				return `投稿の作成中にエラーが発生しました: ${error instanceof Error ? error.message : String(error)}`;
+				return "投稿の作成中にエラーが発生しました";
 			}
 		}
 		return "投稿内容を指定してください。例: 「今日は良い天気です」という投稿を作成して";

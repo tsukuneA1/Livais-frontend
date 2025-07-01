@@ -17,11 +17,12 @@ export class LLMProcessor {
 		this.model = config.model || "gpt-3.5-turbo";
 	}
 
-	async processMessage(message: string, userId?: number, token?: string): Promise<string> {
+	async processMessage(
+		message: string,
+		userId?: number,
+		token?: string,
+	): Promise<string> {
 		try {
-			console.log("LLM processor starting for message:", message);
-			console.log("User ID:", userId);
-			
 			const systemPrompt = `あなたはソーシャルメディアアプリのAIアシスタントです。
 ユーザーの自然言語での要求を理解し、適切なAPI関数を呼び出してください。
 
@@ -56,83 +57,72 @@ export class LLMProcessor {
 				}),
 			);
 
-			console.log("Making OpenAI API call with tools:", tools.length);
 			const response = await this.openai.chat.completions.create({
 				model: this.model,
 				messages,
 				tools,
 				tool_choice: "auto",
 			});
-			console.log("OpenAI API response received");
 
 			const assistantMessage = response.choices[0]?.message;
-			console.log("Assistant message:", assistantMessage);
 
 			if (!assistantMessage) {
 				return "すみません、応答を生成できませんでした。";
 			}
 
-			// Function callsがある場合は実行
 			if (
 				assistantMessage.tool_calls &&
 				assistantMessage.tool_calls.length > 0
 			) {
-				console.log("Processing tool calls:", assistantMessage.tool_calls.length);
 				const results: string[] = [];
 
 				for (const toolCall of assistantMessage.tool_calls) {
 					if (toolCall.type === "function") {
 						const functionName = toolCall.function.name;
 						const functionArgs = JSON.parse(toolCall.function.arguments);
-						console.log(`Executing function: ${functionName} with args:`, functionArgs);
 
-						// userIdが必要な関数の場合は追加
 						if (["likePost", "postReply"].includes(functionName) && userId) {
 							functionArgs.userId = userId;
 						}
 
 						try {
-							const result = await executeApiTool(functionName, functionArgs, token);
-							console.log(`Function ${functionName} result:`, result);
+							const result = await executeApiTool(
+								functionName,
+								functionArgs,
+								token,
+							);
 
 							if (result.success) {
-								// 成功時のレスポンス生成
 								const successResponse = await this.generateSuccessResponse(
 									functionName,
 									functionArgs,
 									result.data,
 								);
-								console.log("Success response:", successResponse);
 								results.push(successResponse);
 							} else {
-								// エラー時のレスポンス生成
-								const errorResponse = await this.generateErrorResponse(functionName, result.error);
-								console.log("Error response:", errorResponse);
+								const errorResponse = await this.generateErrorResponse(
+									functionName,
+									result.error,
+								);
 								results.push(errorResponse);
 							}
 						} catch (error) {
 							console.error(`Error executing function ${functionName}:`, error);
 							const errorMessage = `${functionName}の実行中にエラーが発生しました: ${error instanceof Error ? error.message : "不明なエラー"}`;
-							console.log("Exception response:", errorMessage);
 							results.push(errorMessage);
 						}
 					}
 				}
 
-				const finalResult = results.join("\n");
-				console.log("Final LLM result:", finalResult);
-				return finalResult;
+				return results.join("\n");
 			}
 
-			// Function callsがない場合は通常の応答
 			return (
 				assistantMessage.content ||
 				"申し訳ありませんが、適切な応答を生成できませんでした。"
 			);
 		} catch (error) {
 			console.error("LLM processing error:", error);
-			console.error("LLM error stack:", error instanceof Error ? error.stack : "No stack trace");
-			console.error("LLM error details:", error instanceof Error ? error.message : error);
 			return `AIの処理中にエラーが発生しました: ${error instanceof Error ? error.message : String(error)}`;
 		}
 	}

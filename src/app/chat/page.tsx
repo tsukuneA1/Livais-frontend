@@ -50,7 +50,7 @@ export default function ChatPage() {
 				method: "POST",
 				headers: {
 					"Content-Type": "application/json",
-					...(token && { "Authorization": `Bearer ${token}` }),
+					...(token && { Authorization: `Bearer ${token}` }),
 				},
 				body: JSON.stringify({
 					message: input,

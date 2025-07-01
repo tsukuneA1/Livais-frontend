@@ -40,7 +40,16 @@ export class ApiClient {
 	}
 
 	private getAuthHeaders(): Record<string, string> {
-		const token = localStorage.getItem("token");
+		let token: string | null = null;
+
+		if (typeof window !== "undefined") {
+			// Client-side: use localStorage
+			token = localStorage.getItem("token");
+		} else {
+			// Server-side: use global variable
+			token = (global as any).__authToken || null;
+		}
+
 		return token ? { Authorization: `Bearer ${token}` } : {};
 	}
 
@@ -132,6 +141,7 @@ export class ApiClient {
 			if (error instanceof TypeError && error.message.includes("fetch")) {
 				return Err(new NetworkError("ネットワーク接続に失敗しました"));
 			}
+
 			return Err(
 				error instanceof ApiError
 					? error

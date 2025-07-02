@@ -59,6 +59,7 @@ export const TimelineFetcher = () => {
 						getFollowPosts();
 					}
 				}}
+				className="mt-10"
 			>
 				<TabsList className="w-full grid grid-cols-2">
 					<TabsTrigger value={DEFAULT_TAB}>おすすめ</TabsTrigger>

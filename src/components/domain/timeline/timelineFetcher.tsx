@@ -3,21 +3,18 @@
 import { NewPost } from "@/app/posts/newPost";
 import { PostCard } from "@/components/general/post/postCard";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { fetchTimeline } from "@/lib/api/post";
+import { fetchTimeline, tabType } from "@/lib/api/post";
 import type { Post as PostType } from "@/types/post";
 import { useEffect, useState } from "react";
 
 export const TimelineFetcher = () => {
-	const DEFAULT_TAB = "default";
-	const FOLLOW_TAB = "follow";
-
 	const [defaultPosts, setDefaultPosts] = useState<PostType[]>([]);
 	const [followPosts, setFollowPosts] = useState<PostType[]>([]);
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState<string | null>(null);
 
 	const getFollowPosts = async () => {
-		const result = await fetchTimeline(FOLLOW_TAB);
+		const result = await fetchTimeline(tabType.follow);
 		if (result.success) {
 			setFollowPosts(result.data);
 			setError(null);
@@ -53,25 +50,25 @@ export const TimelineFetcher = () => {
 	return (
 		<>
 			<Tabs
-				defaultValue={DEFAULT_TAB}
+				defaultValue={tabType.default}
 				onValueChange={(value: string) => {
-					if (value === FOLLOW_TAB && followPosts.length === 0) {
+					if (value === tabType.follow && followPosts.length === 0) {
 						getFollowPosts();
 					}
 				}}
 				className="mt-10"
 			>
 				<TabsList className="w-full grid grid-cols-2">
-					<TabsTrigger value={DEFAULT_TAB}>おすすめ</TabsTrigger>
-					<TabsTrigger value={FOLLOW_TAB}>フォロー中</TabsTrigger>
+					<TabsTrigger value={tabType.default}>おすすめ</TabsTrigger>
+					<TabsTrigger value={tabType.follow}>フォロー中</TabsTrigger>
 				</TabsList>
-				<TabsContent value={DEFAULT_TAB}>
+				<TabsContent value={tabType.default}>
 					<NewPost />
 					{defaultPosts.map((post) => (
 						<PostCard key={post.id} post={post} />
 					))}
 				</TabsContent>
-				<TabsContent value={FOLLOW_TAB}>
+				<TabsContent value={tabType.follow}>
 					<NewPost />
 					{followPosts.map((post) => (
 						<PostCard key={post.id} post={post} />

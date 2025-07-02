@@ -11,10 +11,13 @@ import type { Post } from "@/types/post";
 import { Err, Ok, Result } from "@/types/result";
 import { apiClient } from "./api-client";
 
-export type tabType = "default" | "follow";
+export enum tabType {
+	follow = "follow",
+	default = "default",
+}
 
 export const fetchTimeline = async (
-	tab: string = "default",
+	tab: tabType = tabType.default,
 ): Promise<Result<Post[]>> => {
 	const result = await apiClient.get<Post[]>(`/api/v1/?tab=${tab}`);
 

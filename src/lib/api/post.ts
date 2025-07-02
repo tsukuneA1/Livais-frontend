@@ -11,6 +11,8 @@ import type { Post } from "@/types/post";
 import { Err, Ok, Result } from "@/types/result";
 import { apiClient } from "./api-client";
 
+export type tabType = "default" | "follow";
+
 export const fetchTimeline = async (
 	tab: string = "default",
 ): Promise<Result<Post[]>> => {

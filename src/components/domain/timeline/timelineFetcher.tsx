@@ -60,13 +60,9 @@ export const TimelineFetcher = () => {
 					}
 				}}
 			>
-				<TabsList className="w-full">
-					<TabsTrigger value={DEFAULT_TAB} className="w-1/2">
-						おすすめ
-					</TabsTrigger>
-					<TabsTrigger value={FOLLOW_TAB} className="w-1/2">
-						フォロー中
-					</TabsTrigger>
+				<TabsList className="w-full grid grid-cols-2">
+					<TabsTrigger value={DEFAULT_TAB}>おすすめ</TabsTrigger>
+					<TabsTrigger value={FOLLOW_TAB}>フォロー中</TabsTrigger>
 				</TabsList>
 				<TabsContent value={DEFAULT_TAB}>
 					<NewPost />
